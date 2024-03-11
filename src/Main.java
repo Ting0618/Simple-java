@@ -5,10 +5,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         int[] nums = {-345,-45,-2,4,24,453,3453,6548};
-        int target = 43;
+        int target = -345;
         MyArrays myArrays = new MyArrays();
-        int result = -1;
-        result = myArrays.normal(nums, target);
+        int result;
+//        result = myArrays.normal(nums, target);
+        result = myArrays.binarySearch(nums,target);
         System.out.println(result);
     }
 
