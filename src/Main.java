@@ -1,16 +1,16 @@
 import Algorithm.MyArrays;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int[] nums = {-345,-45,-2,4,24,453,3453,6548};
-        int target = -345;
+        int[] nums = {1,2,3,4,5};
         MyArrays myArrays = new MyArrays();
-        int result;
-//        result = myArrays.normal(nums, target);
-        result = myArrays.binarySearch(nums,target);
-        System.out.println(result);
+        int res = myArrays.minSubArrayLen(19,nums);
+        System.out.println(res);
+//        int[] re2 = myArrays.sortedSquares(nums);
+//        System.out.println(Arrays.toString(re2));
     }
 
     static int nTimes(int x, int n){
