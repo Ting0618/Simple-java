@@ -1,4 +1,4 @@
-package Algorithm;
+package Algorithm.myarray;
 
 
 /**
@@ -125,6 +125,11 @@ public class MyArrays {
      subarray
      whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.*/
 
+    /**
+     * create by: Ting
+     * description: TODO
+     * create time: 17/03/2024 19:46
+     */
     public int minSubArrayLen(int target, int[] nums) {
         int res = Integer.MAX_VALUE, length = nums.length;
         int sum = 0,j = 0;
@@ -138,5 +143,21 @@ public class MyArrays {
         }
         return res == Integer.MAX_VALUE?0:res;
     }
+
+    /** Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+     */
+
+    /**
+     * create by: Ting
+     * description: TODO
+     * create time: 17/03/2024 20:29
+     */
+    public int[] spiralArray(int n){
+        int[] res = {};
+
+        return res;
+    }
+
+
 }
 
