@@ -72,7 +72,6 @@ public class MyArrays {
                         nums[index] = value;
                         break;
                     }
-
                 }
             } else {
                 flag ++;
