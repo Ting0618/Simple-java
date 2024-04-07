@@ -10,9 +10,11 @@ public class Test {
         String s = "hello";
         MyString myString = new MyString();
         String res = myString.reverseStr("abcd",4);
-//        res = myString.replaceNumber("a1b2c3");
-//        res = myString.reverseWords("  hello   world  ");
+        res = myString.replaceNumber("a1b2c3");
+        res = myString.reverseWords("  hello   world  ");
         res = myString.specialReverse("abcdefg",2);
-        System.out.println(res);
+//        int kmp = myString.kmp("abcabdanf","abab");
+        boolean t = myString.repeatedSubstringPattern2("abab");
+        System.out.println(t);
     }
 }
