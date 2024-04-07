@@ -1,8 +1,6 @@
 package Algorithm.mysaq;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * create by: Ting
@@ -146,8 +144,16 @@ public class Mystack {
     
     /**
      * create by: Ting
-     * description: TODO
+     * description: TODO sliding window maximum
      * create time: 2024/4/6 15:34
      */
+    public int[] maxSlidingWindow(int[] nums, int k){
+        ArrayList<Integer> res = new ArrayList<>();
+        Deque<Integer> deque = new LinkedList<>();
+
+
+    }
+
+
 
 }
