@@ -141,19 +141,76 @@ public class Mystack {
         }
         return res.toString();
     }
-    
+
     /**
      * create by: Ting
      * description: TODO sliding window maximum
      * create time: 2024/4/6 15:34
      */
-    public int[] maxSlidingWindow(int[] nums, int k){
-        ArrayList<Integer> res = new ArrayList<>();
-        Deque<Integer> deque = new LinkedList<>();
-
-
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int idx = 0;
+        int[] res = new int[n - k + 1];
+        // deque 里面存的是下标，因为我们要保证deque里面只有k个元素，存下标方便我们判断
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!deque.isEmpty() && deque.peek() < i - k + 1) {
+                deque.poll(); // retrieves and remove the first element of this deque =pollFirst()
+            }
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+            // 因为单调，当i增长到符合第一个k范围的时候，每滑动一步都将队列头节点放入结果就行了
+            if (i >= k - 1) {
+                res[idx++] = nums[deque.peekFirst()];
+            }
+        }
+        return res;
     }
 
+    /**
+     * create by: Ting
+     * description: TODO top K frequent elements
+     * create time: 2024/4/7 14:19
+     */
+    public int[] topKfrequent(int[] nums, int k) {
+        int[] res = new int[k];
+        Map<Integer, Integer> map = new HashMap<>();
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>((pair1, pair2) -> pair1[1] - pair2[1]);
+        // 统计每个数字出现的频率
+        for (int i : nums) {
+            if (map.containsKey(i)) {
+                int val = map.get(i);
+                map.put(i, val + 1);
+            } else {
+                map.put(i, 1);
+            }
+        }
+        int i = 0;
+        // 利用单调队列找出top K
+        for (int num : map.keySet()) {
+            int numfre = map.get(num);
+            if (i < k) {
+                int[] temp = {num, numfre};
+                priorityQueue.add(temp);
+            } else {
+                int queFre = priorityQueue.peek()[1];
+                if (queFre < numfre) {
+                    priorityQueue.poll();
+                    priorityQueue.add(new int[]{num, numfre});
+                }
+            }
+            i++;
+        }
+        i = 0;
+        // 将deque中的元素放到数组中返回
+        while (!priorityQueue.isEmpty()) {
+            res[i] = priorityQueue.poll()[0];
+            i++;
+        }
+        return res;
+    }
 
 
 }
