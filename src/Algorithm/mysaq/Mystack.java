@@ -177,7 +177,7 @@ public class Mystack {
     public int[] topKfrequent(int[] nums, int k) {
         int[] res = new int[k];
         Map<Integer, Integer> map = new HashMap<>();
-        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>((pair1, pair2) -> pair1[1] - pair2[1]);
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(pair -> pair[1]));
         // 统计每个数字出现的频率
         for (int i : nums) {
             if (map.containsKey(i)) {
