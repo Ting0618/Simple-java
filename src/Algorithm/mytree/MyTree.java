@@ -27,7 +27,7 @@ public class MyTree {
         if (root == null) {
             return;
         }
-        result.add(root.getData());
+        result.add(Integer.valueOf(root.getData()));
         preorderTraversal(root.getLeft(), result);
         preorderTraversal(root.getRight(), result);
     }
@@ -64,7 +64,7 @@ public class MyTree {
         stack.push(root);       // put the root node into stack first
         while (!stack.empty()) {
             root = stack.pop();     // remove the top element from the stack
-            result.add(root.getData());
+            result.add(Integer.valueOf(root.getData()));
             if (root.getRight() != null) {
                 stack.push(root.getRight());
             }
@@ -90,7 +90,7 @@ public class MyTree {
                     root = root.getLeft();
                 } else {
                     TreeNode temp = stack.pop();
-                    res.add(temp.getData());
+                    res.add(Integer.valueOf(temp.getData()));
                     root = temp.getRight();
                 }
             }
@@ -112,7 +112,7 @@ public class MyTree {
         stack.push(root);
         while (!stack.empty()) {
             root = stack.pop();
-            resTree.push(root.getData());
+            resTree.push(Integer.valueOf(root.getData()));
             if (root.getLeft() != null) {
                 stack.push(root.getLeft());
             }
@@ -141,7 +141,7 @@ public class MyTree {
             int len = queue.size();     // used to record how many elements there are in a layer
             while (len > 0) {
                 TreeNode temp = queue.poll();
-                level.add(temp.getData());
+                level.add(Integer.valueOf(temp.getData()));
                 if (temp.getLeft() != null) queue.add(temp.getLeft());
                 if (temp.getRight() != null) queue.add(temp.getRight());
                 len--;
