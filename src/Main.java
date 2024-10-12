@@ -1,6 +1,4 @@
-import Algorithm.myarray.MyArrays;
-import Algorithm.mylink.LinkNode;
-import Algorithm.mylink.MyLink;
+import algorithm.mylink.LinkNode;
 
 public class Main {
     public static void main(String[] args) {

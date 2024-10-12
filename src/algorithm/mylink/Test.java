@@ -1,4 +1,4 @@
-package Algorithm.mylink;
+package algorithm.mylink;
 
 /**
  * create by: Ting

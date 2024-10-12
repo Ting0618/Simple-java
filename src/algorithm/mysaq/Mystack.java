@@ -1,4 +1,4 @@
-package Algorithm.mysaq;
+package algorithm.mysaq;
 
 import java.util.*;
 

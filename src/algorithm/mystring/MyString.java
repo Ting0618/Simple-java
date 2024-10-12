@@ -1,4 +1,4 @@
-package Algorithm.mystring;
+package algorithm.mystring;
 
 /**
  * create by: Ting

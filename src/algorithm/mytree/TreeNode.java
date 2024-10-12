@@ -1,4 +1,4 @@
-package Algorithm.mytree;
+package algorithm.mytree;
 
 public class TreeNode {
     private int data;

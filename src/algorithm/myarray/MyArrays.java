@@ -1,4 +1,4 @@
-package Algorithm.myarray;
+package algorithm.myarray;
 
 
 /**

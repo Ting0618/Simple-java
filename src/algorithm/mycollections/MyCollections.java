@@ -1,4 +1,4 @@
-package Algorithm.mycollections;
+package algorithm.mycollections;
 
 import java.util.*;
 

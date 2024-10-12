@@ -1,4 +1,4 @@
-package Algorithm.mysaq;
+package algorithm.mysaq;
 
 public class Test {
     public static void main(String[] args) {
