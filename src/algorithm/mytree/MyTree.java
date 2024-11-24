@@ -347,7 +347,8 @@ public class MyTree {
 
     /**
      * create by: Ting
-     * description: TODO Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
+     * description: TODO Given the root of a binary tree and an integer targetSum, return true if the tree
+     * has a root-to-leaf path such that adding up all the values along the path equals targetSum.
      * create time: 2024/4/20 20:06
      */
     public boolean hasPathSum(TreeNode root,int sum){
