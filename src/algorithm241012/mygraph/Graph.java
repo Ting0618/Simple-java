@@ -2,7 +2,10 @@ package algorithm241012.mygraph;
 
 import java.util.List;
 
-interface Graph {
+/**
+ * @author ting
+ */
+public interface Graph {
     /**
      * description: TODO 添加一条边（带权重）
      * create time: Nov 25 2024 12:26

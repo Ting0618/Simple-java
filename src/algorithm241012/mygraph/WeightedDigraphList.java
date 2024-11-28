@@ -26,6 +26,7 @@ public class WeightedDigraphList implements Graph{
      * description: TODO 增，添加一条带权重的有向边，复杂度 O(1)
      * create time: Nov 24 2024 10:40
      */
+    @Override
     public void addEdge(int from, int to, int weight) {
         graph.get(from).add(new Edge(to, weight));
     }
@@ -35,6 +36,7 @@ public class WeightedDigraphList implements Graph{
      * create time: Nov 24 2024 10:48
      * 是要删除graph【from】里面节点为to的那个节点
      */
+    @Override
     public void removeEdge(int from, int to) {
         List<Edge> temp = graph.get(from);
         for(int i = 0; i < temp.size(); i++){
@@ -49,6 +51,7 @@ public class WeightedDigraphList implements Graph{
      * description: TODO  查，判断两个节点是否相邻，复杂度 O(V)
      * create time: Nov 24 2024 10:51
      */
+    @Override
     public boolean hasEdge(int from, int to) {
         for (Edge temp : graph.get(from)) {
             if (temp.to == to) {
@@ -62,6 +65,7 @@ public class WeightedDigraphList implements Graph{
      * description: TODO  查，返回一条边的权重，复杂度 O(V)
      * create time: Nov 24 2024 10:54
      */
+    @Override
     public int weight(int from, int to) {
         for (Edge temp : graph.get(from)) {
             if (temp.to == to) {
@@ -75,6 +79,7 @@ public class WeightedDigraphList implements Graph{
      * description: TODO 查，返回某个节点的所有邻居节点，复杂度 O(1)
      * create time: Nov 24 2024 11:07
      */
+    @Override
     public List<Edge> neighbors(int v) {
         return graph.get(v);
     }
@@ -83,6 +88,7 @@ public class WeightedDigraphList implements Graph{
      * description: TODO get size
      * create time: Nov 25 2024 09:28
      */
+    @Override
     public int size(){
         return graph.size();
     }
