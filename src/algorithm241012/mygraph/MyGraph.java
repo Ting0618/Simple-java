@@ -6,6 +6,9 @@ import java.util.*;
  * @author ting
  */
 public class MyGraph {
+
+    private int[][] matrix;
+
     /**
      * description: TODO 103. traverse all node of a graph
      * create time: Nov 25 2024 09:22
@@ -323,10 +326,10 @@ public class MyGraph {
         int[] inDegree = new int[numCourses];
         // Record the count of elements allowed into the queue
         int count = 0;
-        for(int i = 0; i < numCourses; i++){
+        for (int i = 0; i < numCourses; i++) {
             graph.put(i, new ArrayList<>());
         }
-        for(int[] node: prerequisites){
+        for (int[] node : prerequisites) {
             graph.get(node[1]).add(node[0]);
             inDegree[node[0]]++;
         }
@@ -340,18 +343,275 @@ public class MyGraph {
             }
         }
         //
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             int node = queue.poll();
             count++;
             // Reduce the in-degree of nodes related to node by 1.
-            for(int i: graph.get(node)){
+            for (int i : graph.get(node)) {
                 inDegree[i]--;
-                if(inDegree[i] == 0){
+                if (inDegree[i] == 0) {
                     queue.offer(i);
                 }
             }
         }
         return count == numCourses;
+    }
+
+    /**
+     * description: TODO 110. lc277 Find the Celebrity
+     * create time: Nov 28 2024 08:51
+     */
+    public int findCelebrity(int n) {
+        int cand = 0;
+        for (int other = 1; other < n; other++) {
+            // if candidate knows other or other doesn't know candidate, which means other might be the celebrity
+            if (knows(cand, other) || !knows(other, cand)) {
+                cand = other;
+            }
+            // if not, we change other, because at this place, cand might be the celebrity
+        }
+        // determine if cand is celebrity, it is the last one, but not 100% sure it is celebrity, maybe there is no celebrity
+        for (int i = 0; i < n; i++) {
+            // make sure others know candidate while candidate doesn't know others
+            if (knows(cand, i) || !knows(i, cand)) {
+                return -1;
+            }
+        }
+        return cand;
+    }
+
+    /**
+     * description: TODO if i knows j
+     */
+    public boolean knows(int i, int j) {
+        if (i == j) {
+            return false;
+        }
+        return matrix[i][j] == 1;
+    }
+
+    /**
+     * description: TODO 111 lc200 Number of Islands
+     * create time: Nov 28 2024 10:23
+     */
+    public int numIslands(char[][] grid) {
+        // when encounter island, flood this islands
+        int m = grid.length, n = grid[0].length;
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // when we find an island
+                if (grid[i][j] == '1') {
+                    res++;
+                    floodDfs(grid, i, j);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * description: TODO Starting from grid[i][]j, find all the connected islands and set their values to 0/2.
+     */
+    public void floodDfs(char[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        // out of boundary
+        if (i < 0 || j < 0 || i >= m || j >= n) {
+            return;
+        }
+        // if it's not island
+        if (grid[i][j] != '1') {
+            return;
+        }
+        // if it's island, flood it and the surrounding islands grid[i][j] = '0'
+        // change it to something else it's better
+        grid[i][j] = '2';
+        // top
+        floodDfs(grid, i - 1, j);
+        // bottom
+        floodDfs(grid, i + 1, j);
+        // left
+        floodDfs(grid, i, j - 1);
+        // right
+        floodDfs(grid, i, j + 1);
+    }
+
+    /**
+     * description: TODO 112 lc1254 Number of Closed Islands
+     * create time: Nov 28 2024 11:19
+     */
+    public int closedIsland(int[][] grid) {
+        int res = 0;
+        // flood all island that is at the boundary
+        int m = grid.length;
+        int n = grid[0].length;
+        // flood top and bottom boundary
+        for (int i = 0; i < m; i++) {
+            floodDfs(grid, i, 0);
+            floodDfs(grid, i, n - 1);
+        }
+        // flood left and right boundary
+        for (int j = 0; j < n; j++) {
+            floodDfs(grid, 0, j);
+            floodDfs(grid, m - 1, j);
+        }
+        // find the rest of islands
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    res++;
+                    floodDfs(grid, i, j);
+                }
+            }
+        }
+        return res;
+    }
+
+    public void floodDfs(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        // out of boundary
+        if (i < 0 || j < 0 || i >= m || j >= n) {
+            return;
+        }
+        // if it's not island
+        if (grid[i][j] != 0) {
+            return;
+        }
+        // if it's island, flood it and the surrounding islands grid[i][j] = '0'
+        // change it to something else it's better
+        grid[i][j] = 2;
+        // top
+        floodDfs(grid, i - 1, j);
+        // bottom
+        floodDfs(grid, i + 1, j);
+        // left
+        floodDfs(grid, i, j - 1);
+        // right
+        floodDfs(grid, i, j + 1);
+    }
+
+    /**
+     * description: TODO 113. lc695 Max Area of Island --- DFS
+     * create time: Nov 29 2024 08:48
+     */
+    int tempArea = 0;
+
+    public int maxAreaOfIsland(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    maxAreaOfIslandDFS(grid, i, j);
+                    res = Math.max(tempArea, res);
+                    tempArea = 0;
+                }
+            }
+        }
+        return res;
+    }
+
+    public void maxAreaOfIslandDFS(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if (i < 0 || j < 0 || i >= m || j >= n) {
+            return;
+        }
+        // if it's not island
+        if (grid[i][j] != 1) {
+            return;
+        }
+        grid[i][j] = 2;
+        tempArea++;
+        maxAreaOfIslandDFS(grid, i - 1, j);
+        maxAreaOfIslandDFS(grid, i + 1, j);
+        maxAreaOfIslandDFS(grid, i, j - 1);
+        maxAreaOfIslandDFS(grid, i, j + 1);
+    }
+
+    /**
+     * description: TODO 114. lc1905 Count Sub Islands
+     * create time: Nov 29 2024 09:24
+     */
+    boolean isSubIsland = true;
+    public int countSubIslands(int[][] grid1, int[][] grid2) {
+        int m = grid2.length, n = grid2[0].length;
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid2[i][j] == 1) {
+                    countSubIslandsDfs(grid1, grid2, i, j);
+                    if (isSubIsland) {
+                        res++;
+                    }
+                    // every island has a new start
+                    isSubIsland = true;
+                }
+            }
+        }
+        return res;
+    }
+
+    public void countSubIslandsDfs(int[][] grid1, int[][] grid2, int i, int j) {
+        int m = grid2.length, n = grid2[0].length;
+        if (i < 0 || j < 0 || i >= m || j >= n) {
+            return;
+        }
+        if (grid2[i][j] != 1) {
+            return;
+        }
+        if (grid2[i][j] == 1 && grid1[i][j] != 1) {
+            isSubIsland = false;
+        }
+        grid2[i][j] = 2;
+        countSubIslandsDfs(grid1, grid2, i + 1, j);
+        countSubIslandsDfs(grid1, grid2, i - 1, j);
+        countSubIslandsDfs(grid1, grid2, i, j + 1);
+        countSubIslandsDfs(grid1, grid2, i, j - 1);
+
+    }
+
+    /**
+     * description: TODO 115. lc694 Count the Distinct Island
+     * create time: Nov 29 2024 10:28
+     */
+    int numDistinctIslands(int[][] grid){
+        int m = grid.length, n = grid[0].length;
+        HashSet<String> islands = new HashSet<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    StringBuilder island = new StringBuilder();
+                    numDistinctIslandsDfs(grid, i, j, 0, island);
+                    islands.add(island.toString());
+                }
+            }
+        }
+        return islands.size();
+    }
+    public void numDistinctIslandsDfs(int[][] grid, int i, int j, int dir, StringBuilder island){
+        int m = grid.length;
+        int n = grid[0].length;
+        if (i < 0 || j < 0 || i >= m || j >= n) {
+            return;
+        }
+        if (grid[i][j] != 1) {
+            return;
+        }
+        grid[i][j] = 2;
+        island.append(dir).append(",");
+        // top
+        numDistinctIslandsDfs(grid, i - 1, j, 1, island);
+        // right
+        numDistinctIslandsDfs(grid, i, j + 1, 2, island);
+        // bottom
+        numDistinctIslandsDfs(grid, i + 1, j, 3, island);
+        // left
+        numDistinctIslandsDfs(grid, i, j - 1, 4, island);
+        // record retrieve path
+        island.append(-dir).append(",");
     }
 
 
