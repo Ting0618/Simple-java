@@ -370,7 +370,8 @@ public class MyGraph {
             }
             // if not, we change other, because at this place, cand might be the celebrity
         }
-        // determine if cand is celebrity, it is the last one, but not 100% sure it is celebrity, maybe there is no celebrity
+        // determine if cand is celebrity, it is the last one, but not 100% sure it is celebrity,
+        // maybe there is no celebrity
         for (int i = 0; i < n; i++) {
             // make sure others know candidate while candidate doesn't know others
             if (knows(cand, i) || !knows(i, cand)) {
@@ -613,6 +614,53 @@ public class MyGraph {
         // record retrieve path
         island.append(-dir).append(",");
     }
+
+
+    /**
+     * description: TODO 116. lc785 Is Graph Bipartite --- The colors of every two adjacent nodes are different
+     * create time: Nov 30 2024 09:34
+     */
+    boolean isBipartite;
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        boolean[] visited = new boolean[n];
+        // it's used to store the color of each node, true and false represent different colors
+        boolean[] colors = new boolean[n];
+        isBipartite = true;
+        // Graph traversal requires calling the traversal method one node at a time
+        for(int i = 0; i < n; i++){
+            // if this node is not visited, then we traverse it
+            if(!visited[i]){
+                isBipartiteDfs(graph, i, visited, colors);
+            }
+        }
+    return isBipartite;
+    }
+    public void isBipartiteDfs(int[][] graph, int node, boolean[] visited, boolean[] colors){
+        // if it's not bipartite
+        if(!isBipartite){
+            return;
+        }
+        visited[node] = true;
+        for(int relateNode: graph[node]){
+            if(!visited[relateNode]){
+                colors[relateNode] = !colors[node];
+                isBipartiteDfs(graph, relateNode, visited, colors);
+            } else {
+                if(colors[relateNode] == colors[node]){
+                    isBipartite = false;
+                    return;
+                }
+            }
+        }
+    }
+    
+    
+    /**
+     * description: TODO 117. lc886 Possible Bipartite
+     * create time: Nov 30 2024 10:41
+     */
+
 
 
 }
