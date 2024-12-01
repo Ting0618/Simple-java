@@ -654,12 +654,106 @@ public class MyGraph {
             }
         }
     }
-    
-    
+
     /**
-     * description: TODO 117. lc886 Possible Bipartite
-     * create time: Nov 30 2024 10:41
+     * description: TODO 117, lc323 无向连通图中的联通数量
+     * create time: Dec 01 2024 09:43
      */
+    public int countComponents(int n, int[][] edges){
+        UnionFind uf = new UnionFind(n);
+        for(int[] temp: edges){
+            uf.union(temp[0], temp[1]);
+        }
+        return uf.count();
+    }
+
+    /**
+     * description: TODO 118. lc130 Surrounded Regions
+     * create time: Dec 01 2024 10:05
+     */
+    public void solve(char[][] board) {
+        if(board.length == 0){
+            return;
+        }
+        int m = board.length;
+        int n = board[0].length;
+        // Reserve an extra spot for the dummy
+        UnionFind uf = new UnionFind(m * n + 1);
+        int dummy = m * n;
+        // Connect the O’s in the first and last raws to the dummy
+        for(int i = 0; i < m; i++){
+            if(board[i][0] == 'O'){
+                uf.union(dummy, i * n);
+            }
+            if (board[i][n - 1] == 'O') {
+                uf.union(i * n + n - 1, dummy);
+            }
+        }
+
+        // Connect the O’s in the first and last columns to the dummy
+        for(int j = 0; j < n; j++){
+            if(board[0][j] == 'O'){
+                uf.union(dummy, j);
+            }
+            if(board[m - 1][j] == 'O'){
+                uf.union(n * (m - 1) + j, dummy);
+            }
+        }
+        // direction array
+        int[][] d = new int[][]{{1,0}, {0,1}, {0,-1}, {-1,0}};
+        // Connect the remaining O’s to each other, note: i,j start with 1
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                if(board[i][j] == 'O'){
+                    // Link this O to the adjacent O’s in all four directions: up, down, left, and right.
+                    for(int k = 0; k < 4; k++){
+                        int x = i + d[k][0];
+                        int y = j + d[k][1];
+                        if (x >= 0 && x < m && y >= 0 && y < n && board[x][y] == 'O') {
+                            uf.union(x * n + y, i * n + j);
+                        }
+                    }
+                }
+            }
+        }
+        // Replace any O’s that are not linked to the dummy
+        for (int i = 1; i < m - 1; i++) {
+            for (int j = 1; j < n - 1; j++) {
+                if (!uf.connected(dummy, i * n + j)) {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+
+    /**
+     * description: TODO 119 lc990 Satisfiability of Equality Equations
+     * create time: Dec 01 2024 10:58
+     */
+    public boolean equationsPossible(String[] equations) {
+        // create a UnionFind class
+        UnionFind uf = new UnionFind(26);
+        // Form connected components with identical letters
+        for(String eq: equations){
+            if(eq.charAt(1) == '='){
+                char x = eq.charAt(0);
+                char y = eq.charAt(3);
+                uf.union(x - 'a', y - 'a');
+            }
+        }
+        // Verify whether the inequalities disrupt the connectivity formed by equalities
+        for (String eq : equations) {
+            if (eq.charAt(1) == '!') {
+                char x = eq.charAt(0);
+                char y = eq.charAt(3);
+                // If the equality relationship holds, it results in a logical conflict
+                if (uf.connected(x - 'a', y - 'a'))
+                    return false;
+            }
+        }
+        return true;
+    }
+
 
 
 
