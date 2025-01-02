@@ -1,6 +1,8 @@
 package algorithm241012.myarrays;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author ting
@@ -91,13 +93,13 @@ public class MyArrays {
      */
     public int totalFruit2(int[] fruits) {
         int left = 0, len = fruits.length, max = 0;
-        HashMap<Integer, Integer> bracket = new HashMap<>();
+        HashMap<Integer, Integer> bracket = new HashMap<>(3);
         for (int i = 0; i < len; i++) {
             // 往map中添加元素，使用 getOrDefault 简化逻辑，默认值为 0
             bracket.put(fruits[i], bracket.getOrDefault(fruits[i], 0) + 1);
             // 超过2个了
             while (bracket.size() > 2) {
-                //
+                bracket.put(fruits[left], bracket.get(fruits[left]) - 1);
                 if (bracket.get(fruits[left]) == 0) {
                     bracket.remove(fruits[left]);
                 }
@@ -305,7 +307,7 @@ public class MyArrays {
             }
             sufProduct[j] = sufProduct[j + 1] * nums[j];
         }
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             answers[i] = preProduct[i] * sufProduct[i + 1];
         }
         return answers;
@@ -318,24 +320,24 @@ public class MyArrays {
     public int firstMissingPositive(int[] nums) {
         int len = nums.length;
         // convert all negative numbers to (len+1)
-        for(int i = 0; i < len; i++){
-            if(nums[i] <= 0){
+        for (int i = 0; i < len; i++) {
+            if (nums[i] <= 0) {
                 nums[i] = len + 1;
             }
         }
         int index;
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             // there should use Math.abs(), because during the process, positive numbers may convert to negative,
             // when next time i point this one, it might be changed
             index = Math.abs(nums[i]);
             // we need to compare the abs() with the len, include len
-            if(index <= len){
+            if (index <= len) {
                 nums[index - 1] = -Math.abs(nums[index - 1]);
             }
         }
         // find the first positive number, and plus one,that's the result
-        for(int i = 0; i < len; i++){
-            if(nums[i] > 0){
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) {
                 return i + 1;
             }
         }
@@ -383,4 +385,581 @@ public class MyArrays {
         }
         return res;
     }
+
+
+    /**
+     * description: TODO [?,?,1,0,0,?,1] replace ? with the nearest element on the right
+     * create time: Dec 19 2024 09:39
+     */
+    public String replace(String serverType) {
+        char[] ch = serverType.toCharArray();
+        int size = ch.length;
+        int right;
+        for (int i = 0; i < size; i++) {
+            if (ch[i] == '?') {
+                right = i + 1;
+                while (right < size && ch[right] == '?') {
+                    right++;
+                }
+                if (right < size) {
+                    ch[i] = ch[right];
+                } else if (i > 0) {
+                    ch[i] = ch[i - 1];
+                } else {
+                    // 字符串开始处默认替换为 '0'
+                    ch[i] = '0';
+                }
+            }
+        }
+        return Arrays.toString(ch);
+    }
+
+    /**
+     * description: TODO 127
+     * create time: Dec 19 2024 10:48
+     */
+    public int removeDuplicates(int[] nums) {
+        int len = nums.length;
+        int slow = 0, fast = slow + 1;
+//        for (; slow < len; slow++) {
+//            while (fast < len && nums[slow] == nums[fast]) {
+//                fast++;
+//            }
+//            // nums[fast] not equals nums[i]
+//            if (fast < len) {
+//                nums[slow + 1] = nums[fast];
+//            } else {
+//                break;
+//            }
+//        }
+        // focus on fast, only traverse once until fast reaches the end
+        while (fast < len) {
+            if (nums[slow] != nums[fast]) {
+                slow++;
+                nums[slow] = nums[fast];
+            }
+            fast++;
+        }
+        return slow + 1;
+    }
+
+    /**
+     * description: TODO 129 lc27 Remove Element
+     * create time: Dec 20 2024 09:20
+     */
+    public int removeElement(int[] nums, int val) {
+        int size = nums.length;
+        int slow = 0;
+        int fast = 0;
+        while (fast < size) {
+            if (nums[fast] != val) {
+                nums[slow] = nums[fast];
+                slow++;
+            }
+            fast++;
+        }
+        return slow;
+    }
+
+    /**
+     * description: TODO 130 lc283 Move Zeros
+     * Input: nums = [0,1,0,3,12], Output: [1,3,12,0,0]
+     * create time: Dec 20 2024 09:31
+     */
+    public void moveZeroes(int[] nums) {
+        int slow = 0, fast = 0;
+        while (fast < nums.length) {
+            if (nums[fast] != 0) {
+                nums[slow] = nums[fast];
+                slow++;
+            }
+            fast++;
+        }
+        while (slow < nums.length) {
+            nums[slow] = 0;
+            slow++;
+        }
+    }
+
+    /**
+     * description: TODO 131 lc438 Find all Anagrams in a String
+     * create time: Dec 20 2024 16:36
+     */
+    public List<Integer> findAnagrams(String s, String p) {
+        // 用来记录目标字符串中的字符及其出现次数
+        Map<Character, Integer> map = new HashMap<>(16);
+        // 用来记录窗口中出现的字符及其次数
+        Map<Character, Integer> winEleMap = new HashMap<>(16);
+        List<Integer> res = new ArrayList<>();
+        int left = 0, right = 0;
+
+        // 初始化目标字符串的频率
+        for (char c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        // 边界条件
+        if (s.length() < p.length()) {
+            return res;
+        }
+
+        // 滑动窗口
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            right++;
+
+            // // 如果这个字符在map中有，说明这个元素是要计入 窗口元素是否符合条件的计算中的
+            if (map.containsKey(c)) {
+                // 将这个字符计入winEleMap
+                winEleMap.put(c, winEleMap.getOrDefault(c, 0) + 1);
+            }
+
+            // 当窗口包含的元素满足一定条件时，进入到while循环增加left缩小窗口
+            // 如果窗口大小超过目标字符串长度，则开始收缩窗口
+            while (right - left >= p.length()) {
+                if (map.equals(winEleMap)) {
+                    res.add(left);
+                }
+                char temp = s.charAt(left);
+                left++;
+                // 如果左侧字符在目标字符串中
+                if (map.containsKey(temp)) {
+                    // 如果频率减少到 0，移除该字符
+                    if (winEleMap.get(temp) == 0) {
+                        winEleMap.remove(temp);
+                    } else {
+                        winEleMap.put(temp, winEleMap.get(temp) - 1);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * description: TODO 132 lc76 Minimum Window Substring
+     * create time: Dec 20 2024 15:36
+     */
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> need = new HashMap<>(16);
+        Map<Character, Integer> window = new HashMap<>(16);
+        char[] chs = s.toCharArray();
+        char[] cht = t.toCharArray();
+        int left = 0, right = 0, min = Integer.MAX_VALUE;
+        // valid，记录窗口中有多少字符已经满足了目标字符串的需求
+        int valid = 0, start = 0;
+
+        // record appearance times of each letter of string t
+        for (char c : cht) {
+            need.put(c, need.getOrDefault(c, 0) + 1);
+        }
+        while (right < s.length()) {
+            char c = chs[right];
+            right++;
+            // if string t contains c, add it into map window
+            if (need.containsKey(c)) {
+                window.put(c, window.getOrDefault(c, 0) + 1);
+                if (window.get(c).equals(need.get(c))) {
+                    valid++;
+                }
+            }
+            // update left
+            while (valid == need.size()) {
+                if (right - left < min) {
+                    min = right - left;
+                    start = left;
+                }
+                char temp = s.charAt(left);
+                left++;
+                if (need.containsKey(temp)) {
+                    if (window.get(temp).equals(need.get(temp))) {
+                        valid--;
+                    }
+                    window.put(temp, window.get(temp) - 1);
+                    if (window.get(temp) == 0) {
+                        window.remove(temp);
+                    }
+                }
+            }
+        }
+        return min == Integer.MAX_VALUE ? "" : s.substring(start, start + min);
+    }
+
+
+    /**
+     * description: TODO 133 lc567 Permutation in String
+     * create time: Dec 21 2024 08:38
+     */
+    public boolean checkInclusion(String s1, String s2) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+        if (len1 > len2) {
+            return false;
+        }
+        int right = 0, left = 0, valid = 0;
+        Map<Character, Integer> need = new HashMap<>(len1);
+        Map<Character, Integer> winEle = new HashMap<>(len1);
+        for (char c : s1.toCharArray()) {
+            need.put(c, need.getOrDefault(c, 0) + 1);
+        }
+        while (right < len2) {
+            char rightc = s2.charAt(right);
+            right++;
+            if (need.containsKey(rightc)) {
+                winEle.put(rightc, winEle.getOrDefault(rightc, 0) + 1);
+                if (winEle.get(rightc).equals(need.get(rightc))) {
+                    valid++;
+                }
+            }
+            while (left < right && right - left >= len1) {
+                char leftc = s2.charAt(left);
+                left++;
+                if (valid == need.size()) {
+                    return true;
+                }
+                if (need.containsKey(leftc)) {
+                    if (winEle.get(leftc).equals(need.get(leftc))) {
+                        valid--;
+                    }
+                    winEle.put(leftc, winEle.get(leftc) - 1);
+                    if (winEle.get(leftc) == 0) {
+                        winEle.remove(leftc);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public int solution(int[] D, String[] T) {
+        // 定义最远房子的位置
+        int farP = -1, farG = -1, farM = -1;
+
+        // 找出每种垃圾的最远房子位置
+        for (int i = 0; i < T.length; i++) {
+            String temp = T[i];
+            if (temp.contains("P")) {
+                farP = i;
+            }
+            if (temp.contains("G")) {
+                farG = i;
+            }
+            if (temp.contains("M")) {
+                farM = i;
+            }
+        }
+        // 分别计算每种垃圾车所需时间
+        int timeP = calculateTime(D, T, farP, 'P');
+        int timeG = calculateTime(D, T, farG, 'G');
+        int timeM = calculateTime(D, T, farM, 'M');
+        // 返回所需最大时间
+        return Math.max(timeP, Math.max(timeG, timeM));
+    }
+    public int calculateTime(int[] D, String[] T, int index, char type) {
+        if (index == -1) {
+            // 如果没有这种垃圾类型，时间为0
+            return 0;
+        }
+        int time = 0;
+        // 从起点到最远房子，累加收集垃圾的时间
+        for (int i = 0; i <= index; i++) {
+            // 当前房子有这种垃圾
+            if (T[i].indexOf(type) != -1) {
+                for(char c: T[i].toCharArray()){
+                    if(c == type){
+                        time++;
+                    }
+                }
+            }
+            time += D[i];
+        }
+        // 加上从最远房子返回到起点的时间
+        for (int i = index; i >= 0; i--) {
+            time += D[i];
+        }
+        return time;
+    }
+
+
+    public int solution(String S, int K) {
+        // Implement your solution here
+        int res = 0, left = 0, right = 0;
+        if(K >= S.length()){
+            return res;
+        }
+        // calculate
+        res = calculate(S);
+        while(right < S.length()){
+            right++;
+            // update left
+            while (right - left >= K){
+                String temp = S.substring(0, left) + S.substring(left + K);
+                int tempLen = calculate(temp);
+                res = Math.min(res, tempLen);
+                left++;
+            }
+        }
+        return res;
+    }
+    public int calculate(String str){
+        StringBuilder compressed = new StringBuilder();
+        int n = str.length();
+        int count = 1;
+        for (int i = 1; i <= n; i++) {
+            if (i < n && str.charAt(i) == str.charAt(i - 1)) {
+                count++;
+            } else {
+                // 当前字符结束，添加到压缩字符串中
+                compressed.append(str.charAt(i - 1));
+                if (count > 1) {
+                    compressed.append(count);
+                }
+                // 重置计数
+                count = 1;
+            }
+        }
+        return compressed.length();
+    }
+
+    /**
+     * description: TODO "ABBCC" 压缩为 "A2B2C","AAAA" 压缩为 "A4"
+     * create time: Dec 21 2024 22:20
+     */
+    public String composeStr(String str){
+        StringBuilder sb = new StringBuilder();
+        int right = 0, left = 0;
+        int len = str.length();
+        while(left < len){
+            while(right < len && str.charAt(right) == str.charAt(left)){
+                right++;
+            }
+            sb.append(str.charAt(left));
+            int dis = right - left;
+            if(dis > 1){
+                sb.append(dis);
+            }
+            left = right;
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * description: TODO 134 lc1 Two Sum
+     * create time: Dec 22 2024 12:09
+     */
+    public int[] twoSum(int[] nums, int target) {
+        int len = nums.length;
+        int[] res = new int[2];
+        Map<Integer, List<Integer>> map = new HashMap<>(len);
+        // record elements into a map, key is element, value is index
+        for(int i = 0; i < len; i++){
+            if(map.containsKey(nums[i])){
+                map.get(nums[i]).add(i);
+            } else {
+                List<Integer> l = new ArrayList<Integer>();
+                l.add(i);
+                map.put(nums[i], l);
+            }
+        }
+        for(int i = 0; i < len; i++){
+            // 如果缺的值不是这个值本身
+            if(map.containsKey(target - nums[i])){
+                List<Integer> temp = map.get(target - nums[i]);
+                // 查看缺的值的下标
+                if(temp.size() == 1 && temp.get(0) != i){
+                    res[0] = i + 1;
+                    res[1] = temp.get(0) + 1;
+                    return res;
+                }
+                for(int index: temp){
+                    if(i != index){
+                        res[0] = i + 1;
+                        res[1] = index + 1;
+                        return res;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        int left, len = nums.length, right;
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        int extra;
+        if(len < 3){
+            return res;
+        }
+        Arrays.sort(nums);
+        for(int i = 0; i < len; i++){
+            if(i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            extra = -nums[i];
+            left = i + 1;
+            right = len - 1;
+            while(left < right){
+                int sum = nums[left] + nums[right];
+                if(sum > extra){
+                    right--;
+                } else if(sum < extra){
+                    left++;
+                } else {
+                    List<Integer> item = new ArrayList<>();
+                    item.add(nums[i]);
+                    item.add(nums[left]);
+                    item.add(nums[right]);
+                    res.add(item);
+                    left++;
+                    right--;
+                    while(right > 0 && nums[right] == nums[right + 1]){
+                        right--;
+                    }
+                    while(left < len && nums[left] == nums[left - 1]){
+                        left++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * description: TODO Lc18 Four Sum
+     * create time: Dec 24 2024 10:50
+     */
+    List<List<Integer>> fourSum(int[] nums, int target){
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if(len < 4){
+            return res;
+        }
+        int left, right;
+        for(int i = 0; i < len; i++){
+            if(i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            for(int j = i + 1; j < len; j++){
+                if(j > i + 1 && nums[j] == nums[j - 1]){
+                    continue;
+                }
+                int extra = target - nums[i] - nums[j];
+                left = j + 1;
+                right = len - 1;
+                while(left < right){
+                    int sum = nums[left] + nums[right];
+                    if(sum < extra){
+                        left++;
+                    } else if(sum > extra){
+                        right++;
+                    } else {
+                        List<Integer> item = new ArrayList<>();
+                        item.add(nums[i]);
+                        item.add(nums[j]);
+                        item.add(nums[left]);
+                        item.add(nums[right]);
+                        res.add(item);
+                        left++;
+                        right--;
+                        while(left < len && nums[left] == nums[left - 1]){
+                            left++;
+                        }
+                        while(right > 0 && nums[right] == nums[right--]){
+                            right--;
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    public int findMostOnes(int[][] matrix){
+        // how many rows
+        int m = matrix[0].length;
+        // how many columns
+        int n = matrix.length;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(matrix[j][i] == 1){
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
+
+
+    /**
+     * description: TODO lc347 给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
+     * create time: Jan 01 2025 14:59
+     */
+    public int[] topKFrequent(int[] nums, int k) {
+        // calculate frequency of each element
+        Map<Integer, Integer> map = new HashMap();
+        for(int num: nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                // increasing
+                return o1[1] - o2[1];
+            }
+        };
+        // use a priority queue to sort and find top k
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(comparator);
+        // traverse map, save k elements
+        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+            int[] item = new int[2];
+            // element
+            item[0] = entry.getKey();
+            // frequency
+            item[1] = entry.getValue();
+            minHeap.offer(item);
+            if(minHeap.size() > k){
+                minHeap.poll();
+            }
+        }
+        int[] res = new int[k];
+        for(int i = k - 1; i > -1; i--){
+            res[i] = Objects.requireNonNull(minHeap.poll())[0];
+        }
+        return res;
+    }
+
+
+    public List<int[]> findKCloset(int[][] points, int[] p, int k){
+        List<int[]> res = new ArrayList<>();
+        Comparator<int[]> comparator = new Comparator<>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                double distance1 = (p[0] - o1[0]) * (p[0] - o1[0]) + (p[1] - o1[1]) * (p[1] - o1[1]);
+                double distance2 = (p[0] - o2[0]) * (p[0] - o2[0]) + (p[1] - o2[1]) * (p[1] - o2[1]);
+                return Double.compare(distance1, distance2);
+            }
+        };
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(comparator);
+        // traverse points and calculate distance
+        for(int[] point: points){
+            minHeap.offer(point);
+            if(minHeap.size() > k){
+                minHeap.poll();
+            }
+        }
+        // find k points
+        while(!minHeap.isEmpty()){
+            List<int[]> item = new ArrayList<>();
+            res.add(minHeap.poll());
+        }
+        return res;
+    }
+
+
+
 }

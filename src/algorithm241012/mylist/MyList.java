@@ -377,4 +377,26 @@ public class MyList {
         tou = mergeTwoLists(left, right);
         return tou;
     }
+
+    /**
+     * description: TODO 128 lc83 delete all duplicates
+     * create time: Dec 20 2024 09:04
+     */
+    public LinkNode deleteDuplicates(LinkNode head) {
+        if(head == null){
+            return head;
+        }
+        LinkNode slow = head;
+        LinkNode fast = head.next;
+        while(fast != null){
+            if(slow.val != fast.val){
+                slow.next = fast;
+                slow = slow.next;
+            }
+            fast = fast.next;
+        }
+        // what we need is from head to slow
+        slow.next = null;
+        return head;
+    }
 }

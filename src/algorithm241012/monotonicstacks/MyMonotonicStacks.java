@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MyMonotonicStacks {
     /**
-     * description: TODO 34. (lc793)dailyTemperatures
+     * description: TODO 34. (lc793)daily Temperatures
      * create time: Oct 31 2024 20:17
      */
     public int[] dailyTemperatures(int[] temperatures) {

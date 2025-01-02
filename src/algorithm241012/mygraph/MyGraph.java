@@ -537,6 +537,7 @@ public class MyGraph {
      * create time: Nov 29 2024 09:24
      */
     boolean isSubIsland = true;
+
     public int countSubIslands(int[][] grid1, int[][] grid2) {
         int m = grid2.length, n = grid2[0].length;
         int res = 0;
@@ -578,7 +579,7 @@ public class MyGraph {
      * description: TODO 115. lc694 Count the Distinct Island
      * create time: Nov 29 2024 10:28
      */
-    int numDistinctIslands(int[][] grid){
+    int numDistinctIslands(int[][] grid) {
         int m = grid.length, n = grid[0].length;
         HashSet<String> islands = new HashSet<>();
         for (int i = 0; i < m; i++) {
@@ -592,7 +593,8 @@ public class MyGraph {
         }
         return islands.size();
     }
-    public void numDistinctIslandsDfs(int[][] grid, int i, int j, int dir, StringBuilder island){
+
+    public void numDistinctIslandsDfs(int[][] grid, int i, int j, int dir, StringBuilder island) {
         int m = grid.length;
         int n = grid[0].length;
         if (i < 0 || j < 0 || i >= m || j >= n) {
@@ -621,6 +623,7 @@ public class MyGraph {
      * create time: Nov 30 2024 09:34
      */
     boolean isBipartite;
+
     public boolean isBipartite(int[][] graph) {
         int n = graph.length;
         boolean[] visited = new boolean[n];
@@ -628,26 +631,27 @@ public class MyGraph {
         boolean[] colors = new boolean[n];
         isBipartite = true;
         // Graph traversal requires calling the traversal method one node at a time
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             // if this node is not visited, then we traverse it
-            if(!visited[i]){
+            if (!visited[i]) {
                 isBipartiteDfs(graph, i, visited, colors);
             }
         }
-    return isBipartite;
+        return isBipartite;
     }
-    public void isBipartiteDfs(int[][] graph, int node, boolean[] visited, boolean[] colors){
+
+    public void isBipartiteDfs(int[][] graph, int node, boolean[] visited, boolean[] colors) {
         // if it's not bipartite
-        if(!isBipartite){
+        if (!isBipartite) {
             return;
         }
         visited[node] = true;
-        for(int relateNode: graph[node]){
-            if(!visited[relateNode]){
+        for (int relateNode : graph[node]) {
+            if (!visited[relateNode]) {
                 colors[relateNode] = !colors[node];
                 isBipartiteDfs(graph, relateNode, visited, colors);
             } else {
-                if(colors[relateNode] == colors[node]){
+                if (colors[relateNode] == colors[node]) {
                     isBipartite = false;
                     return;
                 }
@@ -659,9 +663,9 @@ public class MyGraph {
      * description: TODO 117, lc323 无向连通图中的联通数量
      * create time: Dec 01 2024 09:43
      */
-    public int countComponents(int n, int[][] edges){
+    public int countComponents(int n, int[][] edges) {
         UnionFind uf = new UnionFind(n);
-        for(int[] temp: edges){
+        for (int[] temp : edges) {
             uf.union(temp[0], temp[1]);
         }
         return uf.count();
@@ -672,7 +676,7 @@ public class MyGraph {
      * create time: Dec 01 2024 10:05
      */
     public void solve(char[][] board) {
-        if(board.length == 0){
+        if (board.length == 0) {
             return;
         }
         int m = board.length;
@@ -681,8 +685,8 @@ public class MyGraph {
         UnionFind uf = new UnionFind(m * n + 1);
         int dummy = m * n;
         // Connect the O’s in the first and last raws to the dummy
-        for(int i = 0; i < m; i++){
-            if(board[i][0] == 'O'){
+        for (int i = 0; i < m; i++) {
+            if (board[i][0] == 'O') {
                 uf.union(dummy, i * n);
             }
             if (board[i][n - 1] == 'O') {
@@ -691,22 +695,22 @@ public class MyGraph {
         }
 
         // Connect the O’s in the first and last columns to the dummy
-        for(int j = 0; j < n; j++){
-            if(board[0][j] == 'O'){
+        for (int j = 0; j < n; j++) {
+            if (board[0][j] == 'O') {
                 uf.union(dummy, j);
             }
-            if(board[m - 1][j] == 'O'){
+            if (board[m - 1][j] == 'O') {
                 uf.union(n * (m - 1) + j, dummy);
             }
         }
         // direction array
-        int[][] d = new int[][]{{1,0}, {0,1}, {0,-1}, {-1,0}};
+        int[][] d = new int[][]{{1, 0}, {0, 1}, {0, -1}, {-1, 0}};
         // Connect the remaining O’s to each other, note: i,j start with 1
-        for(int i = 1; i < m; i++){
-            for(int j = 1; j < n; j++){
-                if(board[i][j] == 'O'){
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (board[i][j] == 'O') {
                     // Link this O to the adjacent O’s in all four directions: up, down, left, and right.
-                    for(int k = 0; k < 4; k++){
+                    for (int k = 0; k < 4; k++) {
                         int x = i + d[k][0];
                         int y = j + d[k][1];
                         if (x >= 0 && x < m && y >= 0 && y < n && board[x][y] == 'O') {
@@ -734,8 +738,8 @@ public class MyGraph {
         // create a UnionFind class
         UnionFind uf = new UnionFind(26);
         // Form connected components with identical letters
-        for(String eq: equations){
-            if(eq.charAt(1) == '='){
+        for (String eq : equations) {
+            if (eq.charAt(1) == '=') {
                 char x = eq.charAt(0);
                 char y = eq.charAt(3);
                 uf.union(x - 'a', y - 'a');
@@ -754,6 +758,333 @@ public class MyGraph {
         return true;
     }
 
+    /**
+     * description: TODO 120 lc261 Check if the structure created by these edges qualifies as a tree
+     * create time: Dec 01 2024 11:33
+     */
+    public boolean validTree(int n, int[][] edges) {
+        // initialization, from 0 to n-1, in total n nodes
+        UnionFind uf = new UnionFind(n);
+        // Traverse all edges and connect the two nodes that form each edge
+        for (int[] item : edges) {
+            int u = item[0];
+            int v = item[1];
+            // u and v are already connected
+            if (uf.connected(u, v)) {
+                return false;
+            }
+            // otherwise connect u and v
+            uf.union(u, v);
+        }
+        return true;
+    }
+
+    /**
+     * description: TODO 121 lc1135 Connect all cities at the lowest cost
+     * create time: Dec 02 2024 09:04
+     */
+    public int minimumCost(int n, int[][] connections) {
+        int cost = 0;
+        // use unionFind to check if it is a tree
+        UnionFind uf = new UnionFind(n);
+        // sort connection array by ascend order
+        Arrays.sort(connections, (a, b) -> (a[2] - b[2]));
+        // iterator
+        for (int[] edge : connections) {
+            // if edge[0] and edge[1] are already connected
+            if (uf.connected(edge[0], edge[1])) {
+                // here can't return, has to continue,when the condition is true, which means these two nodes has been
+                // connected
+                // return -1, means these edges can't structure a tree
+                continue;
+            }
+            uf.union(edge[0], edge[1]);
+            cost = +edge[2];
+        }
+        // because n starts from 1, so node 0 is extra
+        return uf.count() == 2 ? cost : -1;
+    }
+
+
+    /**
+     * description: TODO 122 lc1584 Min cost to Connect all Points
+     * create time: Dec 02 2024 09:42
+     */
+    public int minCostConnectPoints(int[][] points) {
+        // Create an edge-weight array connecting one point to all other nodes
+        List<int[]> edges = new ArrayList<>();
+        int n = points.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // point[i] to point[j]
+                int xi = points[i][0], yi = points[i][1];
+                int xj = points[j][0], yj = points[j][1];
+                // 用坐标点在 points 中的索引表示坐标点
+                edges.add(new int[]{
+                        i, j, Math.abs(xi - xj) + Math.abs(yi - yj)
+                });
+            }
+        }
+
+        // 将边按照权重从小到大排序
+        edges.sort((a, b) -> {
+            return a[2] - b[2];
+        });
+
+        // 执行 Kruskal 算法
+        int mst = 0;
+        UnionFind uf = new UnionFind(n);
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int weight = edge[2];
+            // 若这条边会产生环，则不能加入 mst
+            if (uf.connected(u, v)) {
+                continue;
+            }
+            // 若这条边不会产生环，则属于最小生成树
+            mst += weight;
+            uf.union(u, v);
+        }
+        return mst;
+    }
+
+
+    /**
+     * description: TODO 123 lc752 Open the Lock
+     * create time: Dec 03 2024 08:49
+     */
+    public int openLock(String[] deadends, String target) {
+        // put dead passwords into a set
+        Set<String> deads = new HashSet<>();
+        // record already be visited password
+        Set<String> visited = new HashSet<>();
+        Queue<String> q = new LinkedList<>();
+        // record step
+        int step = 0;
+        q.offer("0000");
+        visited.add("0000");
+        while (!q.isEmpty()) {
+            int sz = q.size();
+            for (int i = 0; i < sz; i++) {
+                String cur = q.poll();
+                // 判断是否到达终点
+                if (deads.contains(cur)) {
+                    continue;
+                }
+                if (cur.equals(target)) {
+                    return step;
+                }
+                // 将一个节点的未遍历相邻节点加入队列
+                for (int j = 0; j < 4; j++) {
+                    String up = plusOne(cur, j);
+                    if (!visited.contains(up)) {
+                        q.offer(up);
+                        visited.add(up);
+                    }
+                    String down = minusOne(cur, j);
+                    if (!visited.contains(down)) {
+                        q.offer(down);
+                        visited.add(down);
+                    }
+                }
+            }
+            // 在这里增加步数
+            step++;
+        }
+        // 如果穷举完都没找到目标密码，那就是找不到了
+        return -1;
+    }
+
+    /**
+     * description: TODO 将 s[j] 向上拨动一次
+     */
+    String plusOne(String s, int j) {
+        char[] ch = s.toCharArray();
+        if (ch[j] == '9') {
+            ch[j] = '0';
+        } else {
+            ch[j] += 1;
+        }
+        return new String(ch);
+    }
+
+    /**
+     * description: TODO 将 s[i] 向下拨动一次
+     */
+    String minusOne(String s, int j) {
+        char[] ch = s.toCharArray();
+        if (ch[j] == '0') {
+            ch[j] = '9';
+        } else {
+            ch[j] -= 1;
+        }
+        return new String(ch);
+    }
+
+    /**
+     * description: TODO 124. lc127 Word Ladder
+     * create time: Dec 03 2024 09:46
+     */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        // it is used to
+        HashSet<String> set = new HashSet<>(wordList);
+        if (!set.contains(endWord)) {
+            return 0;
+        }
+        // Store each new string obtained by changing one character at a time, provided it exists in the container.
+        Queue<String> queue = new LinkedList<>();
+        // Record the path length from the starting word to the current word
+        Map<String, Integer> visitMap = new HashMap<>(16);
+        queue.offer(beginWord);
+        visitMap.put(beginWord, 1);
+        while (!queue.isEmpty()) {
+            String cur = queue.poll();
+            int path = visitMap.get(cur);
+            // if this is the endWord
+            if (Objects.equals(cur, endWord)) {
+                return path;
+            }
+            // change each position of cur with 26 letters
+            char[] ch = cur.toCharArray();
+            for (int i = 0; i < cur.length(); i++) {
+                // 保存原始字符
+                char original = ch[i];
+                for (char c = 'a'; c <= 'z'; c++) {
+                    ch[i] = c;
+                    String newWord = new String(ch);
+                    // if new word is contained in set and is not visited
+                    if (set.contains(newWord) && !visitMap.containsKey(newWord)) {
+                        visitMap.put(newWord, path + 1);
+                        queue.offer(newWord);
+                    }
+                }
+                ch[i] = original;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * description: TODO 125 给定一个由 1（陆地）和 0（水）组成的矩阵，你最多可以将矩阵中的一格水变为一块陆地，在执行了此操作之后，矩阵中最大的岛屿面积是多少。
+     * create time: Dec 04 2024 08:37
+     */
+    int islandArea = 0;
+    public int largestArea(int[][] grid){
+        int m = grid.length;
+        int n = grid[0].length;
+        int keyName = 2;
+        int res = 0;
+        Map<Integer, Integer> areaMap = new HashMap<>(16);
+        // first traverse to find the area of islands
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(grid[i][j] == 1){
+                    findAreaDfs(grid, keyName, i, j);
+                    areaMap.put(keyName, islandArea);
+                    islandArea = 0;
+                    keyName++;
+                }
+            }
+        }
+        // is case all the cells are 1
+        if(areaMap.size() == 1 && areaMap.get(2) == m * n){
+            return m * n;
+        }
+        // traverse all 0 to find the biggest area
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                // if it's water, change it to land and sum up it's top, bottom, left, right islands area
+                if(grid[i][j] == 0){
+                    int curArea = 1;
+                    Set<Integer> seen = new HashSet<>();
+                    // top
+                    if(i - 1 >= 0 && grid[i - 1][j] > 1) {
+                        seen.add(grid[i - 1][j]);
+                        int adjArea = areaMap.get(grid[i - 1][j]);
+                        curArea += adjArea;
+                    }
+                    // bottom
+                    if(i + 1 < m && grid[i + 1][j] > 1 && seen.add(grid[i + 1][j])){
+                        int adjArea = areaMap.get(grid[i + 1][j]);
+                        curArea += adjArea;
+                    }
+                    // left
+                    if(j - 1 >= 0 && grid[i][j - 1] > 1 && seen.add(grid[i + 1][j])){
+                        int adjArea = areaMap.get(grid[i][j - 1]);
+                        curArea += adjArea;
+                    }
+                    // right
+                    if(j + 1 < n && grid[i][j + 1] > 1 && seen.add(grid[i + 1][j])){
+                        int adjArea = areaMap.get(grid[i][j + 1]);
+                        curArea += adjArea;
+                    }
+                    res = Math.max(res, curArea);
+                }
+            }
+        }
+        return res;
+    }
+    /**
+     * description: TODO find out all islands and change islands to a keyName
+     */
+    public void findAreaDfs(int[][] grid, int keyName, int i, int j){
+        int m = grid.length;
+        int n = grid[0].length;
+        if(i < 0 || j < 0 || i >= m || j >= n){
+            return;
+        }
+        if(grid[i][j] != 1){
+            return;
+        }
+        islandArea++;
+        grid[i][j] = keyName;
+        findAreaDfs(grid, keyName, i - 1, j);
+        findAreaDfs(grid, keyName, i + 1, j);
+        findAreaDfs(grid, keyName, i, j + 1);
+        findAreaDfs(grid, keyName, i, j - 1);
+    }
+
+
+    /**
+     * description: TODO 126 给定一个有向图，包含 N 个节点，节点编号分别为 1，2，...，N。现从 1 号节点开始，
+     * 如果可以从 1 号节点的边可以到达任何节点，则输出 1，否则输出 -1。
+     * create time: Dec 10 2024 09:12
+     */
+    public int reachAll(Graph graph){
+        int size = graph.size();
+        boolean[] visited = new boolean[size];
+        Arrays.fill(visited, false);
+        // traverse through graph and mark nodes that node1 can reach
+        reachAllDfs(graph, 1, visited);
+        for(boolean temp: visited){
+            if(!temp){
+                return -1;
+            }
+        }
+        return 1;
+    }
+    public void reachAllDfs(Graph graph, int cur, boolean[] visited){
+        if(cur < 1 || cur > graph.size()){
+            return;
+        }
+        if(visited[cur - 1]){
+            return;
+        }
+        visited[cur - 1] = true;
+        for(Edge edge: graph.neighbors(cur)){
+            reachAllDfs(graph, edge.to, visited);
+        }
+    }
+
+
+    /**
+     * description: TODO 127 给定一个由 1（陆地）和 0（水）组成的矩阵，岛屿是被水包围，在矩阵中恰好拥有一个岛屿，假设组成岛屿的陆地边长都为 1，请计算岛屿的周长。岛屿内部没有水域。
+     * create time: Dec 10 2024 10:03
+     */
+//    public int findPerimeter(int[][] grid){
+//
+//    }
 
 
 
