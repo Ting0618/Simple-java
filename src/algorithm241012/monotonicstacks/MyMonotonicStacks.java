@@ -180,14 +180,36 @@ public class MyMonotonicStacks {
      */
     public int[] maxSlidingWindow(int[] nums, int k) {
         // record the maximum element of a window, a monotonic stack
-        Deque<Integer> stack = new LinkedList<>();
+        Deque<Integer> queue = new LinkedList<>();
         int len = nums.length;
         int[] res = new int[len];
         int left;
-        // initialize stack
+        // initialize queue
+        queue.push(nums[0]);
         for(int i = 0; i < k; i++){
-
+            if(!queue.isEmpty()){
+                if(nums[i] < queue.peek()){
+                    queue.pop();
+                }
+            }
+            queue.push(nums[i]);
         }
-        return null;
+        res[0] = queue.peek();
+        for(int i = k - 1; i < len; i++){
+            // window
+            left = i - k + 1;
+            if(nums[left] == queue.peek()){
+                queue.pop();
+            }else if(nums[i] <= queue.getLast()){
+                queue.push(nums[i]);
+            } else if(nums[i] > queue.getLast()){
+
+            } else {
+                queue.clear();
+                queue.push(nums[i]);
+            }
+            res[i] = queue.peek();
+        }
+        return res;
     }
 }

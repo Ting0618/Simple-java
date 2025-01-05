@@ -657,6 +657,7 @@ public class MyArrays {
         // 返回所需最大时间
         return Math.max(timeP, Math.max(timeG, timeM));
     }
+
     public int calculateTime(int[] D, String[] T, int index, char type) {
         if (index == -1) {
             // 如果没有这种垃圾类型，时间为0
@@ -667,8 +668,8 @@ public class MyArrays {
         for (int i = 0; i <= index; i++) {
             // 当前房子有这种垃圾
             if (T[i].indexOf(type) != -1) {
-                for(char c: T[i].toCharArray()){
-                    if(c == type){
+                for (char c : T[i].toCharArray()) {
+                    if (c == type) {
                         time++;
                     }
                 }
@@ -686,15 +687,15 @@ public class MyArrays {
     public int solution(String S, int K) {
         // Implement your solution here
         int res = 0, left = 0, right = 0;
-        if(K >= S.length()){
+        if (K >= S.length()) {
             return res;
         }
         // calculate
         res = calculate(S);
-        while(right < S.length()){
+        while (right < S.length()) {
             right++;
             // update left
-            while (right - left >= K){
+            while (right - left >= K) {
                 String temp = S.substring(0, left) + S.substring(left + K);
                 int tempLen = calculate(temp);
                 res = Math.min(res, tempLen);
@@ -703,7 +704,8 @@ public class MyArrays {
         }
         return res;
     }
-    public int calculate(String str){
+
+    public int calculate(String str) {
         StringBuilder compressed = new StringBuilder();
         int n = str.length();
         int count = 1;
@@ -727,17 +729,17 @@ public class MyArrays {
      * description: TODO "ABBCC" 压缩为 "A2B2C","AAAA" 压缩为 "A4"
      * create time: Dec 21 2024 22:20
      */
-    public String composeStr(String str){
+    public String composeStr(String str) {
         StringBuilder sb = new StringBuilder();
         int right = 0, left = 0;
         int len = str.length();
-        while(left < len){
-            while(right < len && str.charAt(right) == str.charAt(left)){
+        while (left < len) {
+            while (right < len && str.charAt(right) == str.charAt(left)) {
                 right++;
             }
             sb.append(str.charAt(left));
             int dis = right - left;
-            if(dis > 1){
+            if (dis > 1) {
                 sb.append(dis);
             }
             left = right;
@@ -755,8 +757,8 @@ public class MyArrays {
         int[] res = new int[2];
         Map<Integer, List<Integer>> map = new HashMap<>(len);
         // record elements into a map, key is element, value is index
-        for(int i = 0; i < len; i++){
-            if(map.containsKey(nums[i])){
+        for (int i = 0; i < len; i++) {
+            if (map.containsKey(nums[i])) {
                 map.get(nums[i]).add(i);
             } else {
                 List<Integer> l = new ArrayList<Integer>();
@@ -764,18 +766,18 @@ public class MyArrays {
                 map.put(nums[i], l);
             }
         }
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             // 如果缺的值不是这个值本身
-            if(map.containsKey(target - nums[i])){
+            if (map.containsKey(target - nums[i])) {
                 List<Integer> temp = map.get(target - nums[i]);
                 // 查看缺的值的下标
-                if(temp.size() == 1 && temp.get(0) != i){
+                if (temp.size() == 1 && temp.get(0) != i) {
                     res[0] = i + 1;
                     res[1] = temp.get(0) + 1;
                     return res;
                 }
-                for(int index: temp){
-                    if(i != index){
+                for (int index : temp) {
+                    if (i != index) {
                         res[0] = i + 1;
                         res[1] = index + 1;
                         return res;
@@ -790,22 +792,22 @@ public class MyArrays {
         int left, len = nums.length, right;
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         int extra;
-        if(len < 3){
+        if (len < 3) {
             return res;
         }
         Arrays.sort(nums);
-        for(int i = 0; i < len; i++){
-            if(i > 0 && nums[i] == nums[i - 1]){
+        for (int i = 0; i < len; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
             }
             extra = -nums[i];
             left = i + 1;
             right = len - 1;
-            while(left < right){
+            while (left < right) {
                 int sum = nums[left] + nums[right];
-                if(sum > extra){
+                if (sum > extra) {
                     right--;
-                } else if(sum < extra){
+                } else if (sum < extra) {
                     left++;
                 } else {
                     List<Integer> item = new ArrayList<>();
@@ -815,10 +817,10 @@ public class MyArrays {
                     res.add(item);
                     left++;
                     right--;
-                    while(right > 0 && nums[right] == nums[right + 1]){
+                    while (right > 0 && nums[right] == nums[right + 1]) {
                         right--;
                     }
-                    while(left < len && nums[left] == nums[left - 1]){
+                    while (left < len && nums[left] == nums[left - 1]) {
                         left++;
                     }
                 }
@@ -832,29 +834,29 @@ public class MyArrays {
      * description: TODO Lc18 Four Sum
      * create time: Dec 24 2024 10:50
      */
-    List<List<Integer>> fourSum(int[] nums, int target){
+    List<List<Integer>> fourSum(int[] nums, int target) {
         int len = nums.length;
         List<List<Integer>> res = new ArrayList<>();
-        if(len < 4){
+        if (len < 4) {
             return res;
         }
         int left, right;
-        for(int i = 0; i < len; i++){
-            if(i > 0 && nums[i] == nums[i - 1]){
+        for (int i = 0; i < len; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
             }
-            for(int j = i + 1; j < len; j++){
-                if(j > i + 1 && nums[j] == nums[j - 1]){
+            for (int j = i + 1; j < len; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
                     continue;
                 }
                 int extra = target - nums[i] - nums[j];
                 left = j + 1;
                 right = len - 1;
-                while(left < right){
+                while (left < right) {
                     int sum = nums[left] + nums[right];
-                    if(sum < extra){
+                    if (sum < extra) {
                         left++;
-                    } else if(sum > extra){
+                    } else if (sum > extra) {
                         right++;
                     } else {
                         List<Integer> item = new ArrayList<>();
@@ -865,10 +867,10 @@ public class MyArrays {
                         res.add(item);
                         left++;
                         right--;
-                        while(left < len && nums[left] == nums[left - 1]){
+                        while (left < len && nums[left] == nums[left - 1]) {
                             left++;
                         }
-                        while(right > 0 && nums[right] == nums[right--]){
+                        while (right > 0 && nums[right] == nums[right--]) {
                             right--;
                         }
                     }
@@ -878,88 +880,152 @@ public class MyArrays {
         return res;
     }
 
-    public int findMostOnes(int[][] matrix){
-        // how many rows
-        int m = matrix[0].length;
-        // how many columns
-        int n = matrix.length;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(matrix[j][i] == 1){
-                    return j;
+
+    public String reverseStr(String s, int k) {
+        char[] ch = s.toCharArray();
+        int len = s.length();
+        int i = 0;
+        while (i < len) {
+            // reverse i to k
+            reverse(ch, i, i + k - 1);
+            i = i + 2 * k;
+        }
+        return String.valueOf(ch);
+    }
+
+    public void reverse(char[] ch, int start, int end) {
+        if (end >= ch.length) {
+            end = ch.length - 1;
+        }
+        while (start < end) {
+            char temp = ch[start];
+            ch[start] = ch[end];
+            ch[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    /**
+     * description: TODO Input: s = "the sky is blue", Output: "blue is sky the"
+     * create time: Jan 04 2025 16:59
+     */
+    public String reverseWords(String s) {
+        int len = s.length();
+        StringBuilder sb = new StringBuilder();
+        int end = len;
+        // remove spaces at the beginning and the end of string
+        StringBuilder tempStr = new StringBuilder(s);
+        // remove spaces at the beginning
+        int index = 0;
+        while (tempStr.charAt(index) == ' ') {
+            tempStr.deleteCharAt(index);
+            index++;
+        }
+        // remove spaces at the end of string
+        index = tempStr.length() - 1;
+        while (tempStr.charAt(index) == ' ') {
+            tempStr.deleteCharAt(index);
+            index--;
+        }
+        // remove extra spaces in the string
+        index = tempStr.length() - 1;
+
+
+        for (int i = len - 1; i >= 0; i--) {
+            if (s.charAt(i) == ' ') {
+                sb.append(s, i + 1, end).append(" ");
+                end = i;
+            }
+            if (i == 0) {
+                sb.append(s, i, end);
+            }
+        }
+        return sb.toString();
+    }
+
+    public String reverseWords2(String s) {
+        int len = s.length();
+        StringBuilder word = new StringBuilder();
+        StringBuilder res = new StringBuilder();
+        for (int i = len - 1; i >= 0; i--) {
+            if (s.charAt(i) != ' ') {
+                word.insert(0, s.charAt(i));
+            } else {
+                if (!word.isEmpty()) {
+                    res.append(word).append(" ");
+                    word = new StringBuilder();
                 }
             }
         }
-        return -1;
+        System.out.println(word);
+        return res.toString();
     }
 
+    public String reverseWords3(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        sb.insert(0, " ");
+        int len = sb.length();
+        StringBuilder res = new StringBuilder();
+        int flag = -1;
+        for (int i = len - 1; i >= 0; i--) {
+            if (sb.charAt(i) != ' ') {
+                if (flag == -1) {
+                    flag = i;
+                }
+            } else {
+                if (flag != -1) {
+                    res.append(sb, i + 1, flag + 1).append(" ");
+                    flag = -1;
+                }
+            }
+        }
+        return res.deleteCharAt(res.length() - 1).toString();
+    }
 
+    public String move(String str, int k){
+        int len = str.length();
+        char[] ch = str.toCharArray();
+        for(int i = 0; i < k; i++){
+            char c = ch[i];
+            if(len - k + i >= len){
+                break;
+            }
+            ch[i] = ch[len - k + i];
+            ch[len - k + i] = c;
+        }
+        return String.valueOf(ch);
+    }
 
-    /**
-     * description: TODO lc347 给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
-     * create time: Jan 01 2025 14:59
-     */
-    public int[] topKFrequent(int[] nums, int k) {
-        // calculate frequency of each element
-        Map<Integer, Integer> map = new HashMap();
+    public int[] topKFrequent(int[] nums, int k){
+        Map<Integer, Integer> map = new HashMap<>();
+        // compute frequency of each element
         for(int num: nums){
             map.put(num, map.getOrDefault(num, 0) + 1);
         }
-        Comparator<int[]> comparator = new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                // increasing
-                return o1[1] - o2[1];
-            }
-        };
-        // use a priority queue to sort and find top k
-        PriorityQueue<int[]> minHeap = new PriorityQueue<>(comparator);
-        // traverse map, save k elements
-        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
-            int[] item = new int[2];
-            // element
-            item[0] = entry.getKey();
-            // frequency
-            item[1] = entry.getValue();
-            minHeap.offer(item);
-            if(minHeap.size() > k){
-                minHeap.poll();
-            }
-        }
-        int[] res = new int[k];
-        for(int i = k - 1; i > -1; i--){
-            res[i] = Objects.requireNonNull(minHeap.poll())[0];
-        }
-        return res;
-    }
-
-
-    public List<int[]> findKCloset(int[][] points, int[] p, int k){
-        List<int[]> res = new ArrayList<>();
         Comparator<int[]> comparator = new Comparator<>() {
             @Override
             public int compare(int[] o1, int[] o2) {
-                double distance1 = (p[0] - o1[0]) * (p[0] - o1[0]) + (p[1] - o1[1]) * (p[1] - o1[1]);
-                double distance2 = (p[0] - o2[0]) * (p[0] - o2[0]) + (p[1] - o2[1]) * (p[1] - o2[1]);
-                return Double.compare(distance1, distance2);
+                return o1[1] - o2[1];
             }
         };
         PriorityQueue<int[]> minHeap = new PriorityQueue<>(comparator);
-        // traverse points and calculate distance
-        for(int[] point: points){
-            minHeap.offer(point);
-            if(minHeap.size() > k){
+        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+            if(minHeap.size() >= k){
                 minHeap.poll();
             }
+            int[] temp = new int[2];
+            temp[0] = entry.getKey();
+            temp[1] = entry.getValue();
+            minHeap.offer(temp);
         }
-        // find k points
+        int[] res = new int[minHeap.size()];
+        int index = 0;
         while(!minHeap.isEmpty()){
-            List<int[]> item = new ArrayList<>();
-            res.add(minHeap.poll());
+            res[index] = minHeap.poll()[0];
+            index++;
         }
         return res;
     }
-
-
 
 }

@@ -22,7 +22,7 @@ public class Test {
                 {1, 1, 1, 1},
                 {0, 0, 0, 0}
         };
-        int res = myArrays.findMostOnes(matrix);
+        String res = myArrays.move("abcdefg", 2);
         System.out.println(res);
     }
 }
