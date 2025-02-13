@@ -1325,7 +1325,7 @@ public class MyTree {
     }
 
     /**
-     * description: TODO 90. lc235 theLowest Common Ancestor of a BST
+     * description: TODO 90. lc235 the Lowest Common Ancestor of a BST
      * create time: Nov 18 2024 12:31
      */
     public TreeNode lowestCommonAncestorBST(TreeNode root, TreeNode p, TreeNode q){
@@ -1352,6 +1352,48 @@ public class MyTree {
             return root;
         }
         return left != null? left: right;
+    }
+
+    /**
+     * @Description TODO lc314 Vertical Order traverse a binary tree
+     * @Date 2025/1/21 08:44
+     **/
+    public List<List<Integer>> verticalOrder(TreeNode root){
+        // traverse tree by bfs
+        if(root == null){
+            return null;
+        }
+        List<List<Integer>> res = new LinkedList<>();
+        Queue<Pair> queue = new LinkedList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Pair pair = new Pair(root, 0);
+        queue.offer(pair);
+        int min = 0, max = 0;
+        while (!queue.isEmpty()){
+            Pair cur = queue.poll();
+            TreeNode curNode = cur.treeNode;
+            int curColumn = cur.column;
+            // map
+            if(map.containsKey(curColumn)){
+                map.get(curColumn).add(curNode.val);
+            } else {
+                map.put(curColumn, new ArrayList<>());
+            }
+            if(curNode.left != null){
+                queue.offer(new Pair(curNode.left, curColumn - 1));
+                min = Math.min(curColumn - 1, min);
+            }
+            if(curNode.right != null){
+                queue.offer(new Pair(curNode.right, curColumn + 1));
+                max = Math.max(curColumn + 1, max);
+            }
+        }
+        // get all data from map
+        for(int i = min; i <= max; i++){
+            List<Integer> item = map.get(i);
+            res.add(item);
+        }
+        return res;
     }
 
 }

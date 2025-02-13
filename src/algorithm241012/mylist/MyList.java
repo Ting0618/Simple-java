@@ -320,7 +320,7 @@ public class MyList {
     }
 
     /**
-     * description: TODO 46. (lc38) Copy List With Random Pointer
+     * description: TODO 46. (lc138) Copy List With Random Pointer
      * create time: Nov 05 2024 10:20
      */
     public LinkNode copyRandomList(LinkNode head) {
@@ -399,4 +399,7 @@ public class MyList {
         slow.next = null;
         return head;
     }
+
+
+
 }

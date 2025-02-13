@@ -133,7 +133,7 @@ public class MyArrays {
     }
 
     /**
-     * description: TODO 7. Given a binary array nums and an integer k, return the maximum number of consecutive 1's
+     * description: TODO 7. lc1004 Given a binary array nums and an integer k, return the maximum number of consecutive 1's
      * in the array if you can flip at most k 0's.
      * 控制滑动窗口内0的个数不超过k即可
      * create time: Oct 18 2024 20:36

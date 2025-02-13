@@ -106,6 +106,7 @@ public class MyHash {
         for (int k : nums1) {
             for (int i : nums2) {
                 // 2. don't understand why value is the appearance times of the same sum
+                // value == 2, means there are two pairs of nums that the sum is key
                 map.put(k + i, map.getOrDefault(k + i, 0) + 1);
             }
         }
@@ -114,6 +115,7 @@ public class MyHash {
             for(int d: nums4){
                 if(map.containsKey(-(c + d))){
                     // 3. here is not only simply res++, cause the sum of a + b has Value types of arrangement
+                    // cause "res" is the occurrence of nums that sum up to 0,
                     res += map.get(-(c+d));
                 }
             }
@@ -178,6 +180,8 @@ public class MyHash {
                         right--;
                     }
                     // 4. the same, but why?
+                    // 5. why left < right? cause what if all nums are the same? left can add to maximum right, right can
+                    // minus to minimum left
                     while(nums[left] == nums[left + 1] && left < right){
                         left++;
                     }

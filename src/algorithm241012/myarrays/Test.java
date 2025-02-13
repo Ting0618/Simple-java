@@ -22,7 +22,7 @@ public class Test {
                 {1, 1, 1, 1},
                 {0, 0, 0, 0}
         };
-        String res = myArrays.move("abcdefg", 2);
+        String res = myArrays.reverseStr("abcdefghijk", 2);
         System.out.println(res);
     }
 }

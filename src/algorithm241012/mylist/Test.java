@@ -36,5 +36,7 @@ public class Test {
 //        secondnode.next = firstnode; // 步骤二
 //        firstnode.next = temp;      // 步骤三
 //        cur = firstnode;
+        int[] nums = {1,2,3,4};
     }
+
 }
