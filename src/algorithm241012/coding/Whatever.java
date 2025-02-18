@@ -426,32 +426,113 @@ public class Whatever {
         return slow;
     }
 
-    public void backtracking(String s, int start, List<String> path, List<List<String>> res){
-        if(start >= s.length()){
-            res.add(new ArrayList<String>(path));
+    public void backtrack(String s, int start, StringBuilder path, List<String> res){
+        if(start == s.length()){
+            path.deleteCharAt(path.length() - 1);
+            res.add(path.toString());
         }
         for(int i = start; i < s.length(); i++){
-            if(!isHui(s.substring(start, i + 1))){
+            if(i - start >= 3) break;
+            String sub = s.substring(start, i + 1);
+            if(sub.charAt(0) == '0'){
                 continue;
             }
-            path.add(s.substring(start, i + 1));
-            backtracking(s, i + 1, path, res);
+            path.append(s, start, i + 1).append(".");
+            backtrack(s, i + 1, path, res);
+            path.deleteCharAt(path.length() - 1);
+            path.deleteCharAt(path.length() - 1);
+        }
+    }
+
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        List<Integer> path = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        backtrack(nums, 0, path, res);
+        return res;
+    }
+    public void backtrack(int[] nums, int start, List<Integer> path, List<List<Integer>> res){
+        if(path.size() >= 2){
+            res.add(new ArrayList<>(path));
+            // If return is used, the function will stop early and always output two numbers.
+            // return;
+        }
+        Set<Integer> set = new HashSet<>();
+        for(int i = start; i < nums.length; i++){
+            // this approach is incorrect, if the array is sorted, we can compare adjacent elements to remove duplicates
+            // at the same tree level, but what if the array is not sorted?
+            // if(i > start && nums[i] <= nums[i - 1]){
+            //     continue;
+            // }
+
+            // if the array is not sorted, how to avoid using duplicates? -- using a hashset to remove duplicates at
+            // the tree level
+            if(set.contains(nums[i])){
+                continue;
+            }
+            // the selection range for the next tree level should be smaller than those in the previous tree level,
+            // how to compare values between different tree levels? -- compare with the value in the path,
+            // nums[i] and nums[i - 1] can only be compared within the same tree level
+            if(!path.isEmpty() && path.getLast() > nums[i]){
+                continue;
+            }
+            path.add(nums[i]);
+            set.add(nums[i]);
+            backtrack(nums, i + 1, path, res);
             path.removeLast();
         }
     }
-    public boolean isHui(String str){
-        if(str.isEmpty()){
-            return false;
-        }
-        int len = str.length();
-        int left = 0, right = len - 1;
-        while(left < right){
-            if(str.charAt(left) != str.charAt(right)){
-                return false;
-            }
-            left++;
-            right--;
-        }
-        return true;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<Integer> path = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        Arrays.sort(nums);
+        backtrack(nums, used, path, res);
+        return res;
     }
+    public void backtrack(int[] nums, boolean[] used, List<Integer> path, List<List<Integer>> res){
+        if(path.size() == nums.length){
+            res.add(new ArrayList<>(path));
+        }
+        for(int i = 0; i < nums.length; i++){
+            if(used[i]){
+                continue;
+            }
+            if(i > 0 && nums[i] == nums[i - 1] && !used[i - 1]){
+                continue;
+            }
+            used[i] = true;
+            path.add(nums[i]);
+            backtrack(nums, used, path, res);
+            path.removeLast();
+            used[i] = false;
+        }
+    }
+
+    public int[] nextGreaterElements(int[] nums) {
+        int len = nums.length;
+        Map<Integer, Integer> map = new HashMap<>();
+        // find the cycle position
+        int index = -1;
+        for(int i = 0; i < len; i++){
+            if(map.containsKey(nums[i])){
+                index = map.get(nums[i]);
+                break;
+            }
+            map.put(nums[i], i);
+        }
+        int arrLen = len - index - 1 + len;
+        int[] arr = new int[arrLen];
+        // set arr's value
+        for(int i = 0; i < arrLen; i++){
+            if(i >= len - 1 && map.containsKey(nums[i - len + index])){
+                arr[i] = nums[map.get(nums[i - len + index])];
+            } else {
+                arr[i] = nums[i];
+                map.put(nums[i], i);
+            }
+        }
+        return arr;
+    }
+
 }

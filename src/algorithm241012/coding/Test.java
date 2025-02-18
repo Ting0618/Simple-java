@@ -3,6 +3,7 @@ package algorithm241012.coding;
 import algorithm241012.mytree.MyTree;
 import algorithm241012.mytree.TreeNode;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,9 +17,9 @@ public class Test {
         TreeNode b = new TreeNode(9, null, null);
         TreeNode root = new TreeNode(3, b, c);
         Whatever whatever = new Whatever();
-        int[] nums = {1,1,1,1};
+        int[] nums = {3,1,4,2,4};
 //        List<String> res = whatever.findString("awedwfuri", 4);
-        int res = whatever.removeDuplicates2(nums);
-        System.out.println(res);
+        int[] res = whatever.nextGreaterElements(nums);
+        System.out.println(Arrays.toString(res));
     }
 }

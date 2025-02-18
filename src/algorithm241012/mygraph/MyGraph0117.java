@@ -5,6 +5,7 @@ import java.util.*;
 
 /**
  * @author tingwong
+ * 这个里面的有的方法居然在一开始的时候就学错了。。。离谱，特别是遍历
  */
 public class MyGraph0117 {
     /**
@@ -212,6 +213,60 @@ public class MyGraph0117 {
     }
     
 
+    /**
+     * @Description TODO find all paths from 1 to n, graph probably has cycle
+     * @Date 2025/2/17 10:11
+     **/
+    public void findAllPathsDfs(Map<Integer, List<Integer>> graph, boolean[] used, List<Integer> path,
+                                List<List<Integer>> res, int key, int n){
+        if(graph == null || !graph.containsKey(key)){
+            return;
+        }
+        if(used[key]){
+            return;
+        }
+        path.add(key);
+        // key has been put in path, so we need to make it to true
+        used[key] = true;
+        if(key == n){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        List<Integer> neighbors = graph.get(key);
+        if(neighbors != null){
+            for(Integer neighbor: neighbors){
+                if(!used[neighbor]){
+                    findAllPathsDfs(graph, used, path, res, neighbor, n);
+                }
+            }
+        }
+        path.removeLast();
+        used[key] = false;
+    }
 
-
+    /**
+     * @Description TODO traverse all graph nodes
+     * @Date 2025/2/17 10:23
+     **/
+    public void traverseG(Map<Integer, List<Integer>> graph, boolean[] visited, int key){
+        if(graph == null || !graph.containsKey(key)){
+            return;
+        }
+        // it has been visited, we need to skip
+        if(visited[key]){
+            return;
+        }
+        // 1. forgot set visited[key] = true
+        visited[key] = true;
+        List<Integer> children = graph.get(key);
+        if(children != null){
+            for(Integer child: children){
+                // 2. if this node hasn't been visited, then visit this one, otherwise skip
+                if(!visited[child]){
+                    // if set visited[child] = true here, visited[key] would always be true
+                    traverseG(graph, visited, child);
+                }
+            }
+        }
+    }
 }
