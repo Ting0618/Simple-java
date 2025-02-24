@@ -17,9 +17,23 @@ public class Test {
         TreeNode b = new TreeNode(9, null, null);
         TreeNode root = new TreeNode(3, b, c);
         Whatever whatever = new Whatever();
-        int[] nums = {3,1,4,2,4};
+        int[][] grid = {
+                {1, 1, 1, 1, 0},
+                {1, 1, 0, 1, 0},
+                {1, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0}
+        };
+        int[][] grid2 = {
+                {0,1},
+                {0,2},
+                {0,3},
+                {1,4},
+        };
+        int[] nums = {4,0,-4,-2,2,5,2,0,-8,-8,-8,-8,-1,7,4,5,5,-4,6,6,-3};
+        String[] words = {"hello","leetcode"};
+        String order = "hlabcdefgijkmnopqrstuvwxyz";
 //        List<String> res = whatever.findString("awedwfuri", 4);
-        int[] res = whatever.nextGreaterElements(nums);
-        System.out.println(Arrays.toString(res));
+        int res = whatever.longestConsecutive(nums);
+        System.out.println(res);
     }
 }

@@ -535,4 +535,160 @@ public class Whatever {
         return arr;
     }
 
+
+    int minutes = 0;
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        List<List<Integer>> rotting = new ArrayList<>();
+        // find all rotting oranges
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(grid[i][j] == 2){
+                    List<Integer> temp = new ArrayList<>();
+                    temp.add(i);
+                    temp.add(j);
+                    rotting.add(temp);
+                }
+            }
+        }
+        bfs(grid, rotting);
+        // to find if fresh pranges exist
+        for (int[] ints : grid) {
+            for (int j = 0; j < n; j++) {
+                if (ints[j] == 1) {
+                    return -1;
+                }
+            }
+        }
+        return minutes == 0? 0:minutes - 1;
+    }
+    public void bfs(int[][] grid, List<List<Integer>> allBad){
+        Deque<int[]> queue = new LinkedList<>();
+        int m = grid.length;
+        int n = grid[0].length;
+        for(List<Integer> bad: allBad){
+            int[] item = new int[2];
+            item[0] = bad.get(0);
+            item[1] = bad.get(1);
+            queue.offer(item);
+        }
+        int size = 0;
+        // 方向数组（上、下、左、右）
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while(!queue.isEmpty()){
+            size = queue.size();
+            for(int k = 0; k < size; k++){
+                int[] item = queue.poll();
+                int i = item[0];
+                int j = item[1];
+                for(int[] dire: directions){
+                    int newX = i + dire[0];
+                    int newY = j + dire[1];
+                    if(newX >= 0 && newY >= 0 && newX < m && newY < n && grid[newX][newY] == 1){
+                        grid[newX][newY] = 2;
+                        queue.offer(new int[]{newX, newY});
+                    }
+                }
+            }
+            minutes++;
+        }
+    }
+
+
+    public boolean validTree(int n, int[][] edges) {
+        int[][] graph = buildGraph(n, edges);
+        boolean[] used = new boolean[n];
+        // 1. check if has cycle
+        boolean hasCycle = hasCycle(graph, used);
+        // 2. count the number of connected components in the graph.
+        if(hasCycle){
+            return false;
+        }
+        for(boolean use: used){
+            if(!use){
+                return false;
+            }
+        }
+        return true;
+    }
+    // create a graph
+    public int[][] buildGraph(int n, int[][] edges){
+        int[][] graph = new int[n][n];
+        for(int[] edge: edges){
+            int from = edge[0];
+            int to = edge[1];
+            graph[from][to] = 1;
+            graph[to][from] = 1;
+        }
+        return graph;
+    }
+    public boolean hasCycle(int[][] graph, boolean[] used){
+        int n = graph.length;
+        Deque<Integer> queue = new LinkedList<>();
+        queue.offer(0);
+        used[0] = true;
+        while(!queue.isEmpty()){
+            int top = queue.poll();
+            for(int i = 0; i < n; i++){
+                if(graph[top][i] == 1){
+                    if(used[i]){
+                        return true;
+                    }
+                    queue.offer(i);
+                    used[i] = true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean isAlienSorted(String[] words, String order) {
+        // use a map to store its order
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < order.length(); i++){
+            char c = order.charAt(i);
+            map.put(c, i + 1);
+        }
+        int previous = 0;
+        for(String word: words){
+            for(char c: word.toCharArray()){
+                int or = map.get(c);
+                if(or < previous){
+                    return false;
+                }
+                previous = or;
+            }
+            previous = 0;
+        }
+        return true;
+    }
+
+    public int longestConsecutive(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        // put all elements into a map<value, index>
+        Set<Integer> set = new HashSet<>();
+        int len = nums.length;
+        for (int j : nums) {
+            set.add(j);
+        }
+        // if nums[i] is not the midle number in the sequence
+        int maxLen = 0, num = 0, res = 0;
+        for (int j : set) {
+            num = j;
+            maxLen = 1;
+            if (!set.contains(num - 1)) {
+                while (set.contains(num + 1)) {
+                    maxLen++;
+                    num++;
+                }
+                res = Math.max(maxLen, res);
+            }
+        }
+        return res;
+    }
+
 }
