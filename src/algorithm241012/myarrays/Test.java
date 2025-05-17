@@ -6,12 +6,8 @@ import java.util.List;
 public class Test {
     public static void main(String[] args) {
         MyArrays myArrays = new MyArrays();
-        int[][] nums = {{2,3},{2,6},{7,9}};
-        int[] nums2 = {2,2,2,2,2};
-//        int[] resArr = myArrays.sortedSquares(nums);
-//        for(int i = 0; i < resArr.length; i++){
-//            System.out.println(resArr[i]);
-//        }
+        int[][] nums = {{1,1}};
+        int[] nums2 = {1,1,2};
         String s1 = "adc";
         String s2 = "dcda";
         String[] T = {"PGP", "M"};
@@ -22,7 +18,8 @@ public class Test {
                 {1, 1, 1, 1},
                 {0, 0, 0, 0}
         };
-        String res = myArrays.reverseStr("abcdefghijk", 2);
+
+        boolean res = myArrays.searchMatrix(nums, 2);
         System.out.println(res);
     }
 }

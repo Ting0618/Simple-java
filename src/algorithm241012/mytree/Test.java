@@ -20,15 +20,20 @@ public class Test {
         TreeNode d = new TreeNode(15,null,null);
         TreeNode c = new TreeNode(20,d,e);
         TreeNode b = new TreeNode(9,null,null);
+//        TreeNode b = new TreeNode(-1,null,null);
         TreeNode root = new TreeNode(3,b,c);
         MyTree myTree = new MyTree();
 //        boolean res = myTree.hasPathSum(root, 22);
 //        List<List<Integer>> path = myTree.pathSum(root,22);
 //        int aa = myTree.diameterOfBinaryTree(root, 0,0);
-        StringBuilder sb = new StringBuilder();
-        String res = myTree.serilise(root, sb);
+//        StringBuilder sb = new StringBuilder();
+        String res = myTree.serialize(root);
         System.out.println(res);
-        System.out.println(sb);
-
+        TreeNode n = myTree.deserialize(res);
+//        System.out.println(sb);
+//        List<List<Integer>> res = myTree.zigzagLevelOrder(root);
+//        for(List<Integer> item: res){
+//            System.out.println(item);
+//        }
     }
 }

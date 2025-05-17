@@ -1,8 +1,10 @@
 package algorithm241012.coding;
 
 
+import algorithm241012.mylist.LinkNode;
 import algorithm241012.mytree.TreeNode;
 
+import javax.xml.stream.events.Characters;
 import java.util.*;
 
 /**
@@ -690,5 +692,235 @@ public class Whatever {
         }
         return res;
     }
+
+    boolean[][] visited;
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        visited = new boolean[m][n];
+        boolean res = false;
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(board[i][j] == word.charAt(0)){
+                    res = search(board, word, i, j, 0);
+                    if(res){
+                        return res;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    public boolean search(char[][] board, String word, int i, int j, int index){
+        int m = board.length;
+        int n = board[0].length;
+        if(i < 0 || j < 0 || i >= m || j >= n){
+            return false;
+        }
+        if(board[i][j] != word.charAt(index)){
+            return false;
+        }
+        if(index == word.length() - 1){
+            return true;
+        }
+        board[i][j] = '1';
+        visited[i][j] = true;
+        boolean top = search(board, word, i - 1, j, index + 1);
+        boolean bottom = search(board, word, i + 1, j, index + 1);
+        boolean left = search(board, word, i, j - 1, index + 1);
+        boolean right = search(board, word, i, j + 1, index + 1);
+        return top || bottom || left || right;
+    }
+
+    public List<List<Integer>> findSubsequences2(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        List<Integer> path = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(nums, 0, path, res);
+        return res;
+    }
+    public void dfs(int[] nums, int start, List<Integer> path, List<List<Integer>> res){
+        if(path.size() >= 2){
+            res.add(new ArrayList<>(path));
+        }
+        Set<Integer> set = new HashSet<>();
+        for(int i = start; i < nums.length; i++){
+            if(!path.isEmpty() && nums[i] < path.getLast()){
+                continue;
+            }
+            if(set.contains(nums[i])){
+                continue;
+            }
+            set.add(nums[i]);
+            path.add(nums[i]);
+            dfs(nums, i + 1, path, res);
+            path.removeLast();
+
+        }
+    }
+
+    public int subarraySum(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int sum = 0, len = nums.length, res = 0;
+        for(int i = 0; i < len; i++){
+            sum += nums[i];
+            int need = sum - k;
+            if(map.containsKey(need)){
+                res += map.get(need);
+            }
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return res;
+    }
+
+    public int findMaxLength(int[] nums) {
+        int len = nums.length;
+        for(int i = 0; i < len; i++){
+            if(nums[i] == 0){
+                nums[i] = -1;
+            }
+        }
+        int sum = 0, maxLen = 0;;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        for(int i = 0; i < len; i++){
+            sum += nums[i];
+            if(map.containsKey(sum)){
+                int index = map.get(sum);
+                maxLen = Math.max(maxLen, i - index);
+            } else {
+                map.put(sum, i);
+            }
+        }
+        return maxLen;
+    }
+
+
+
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums1.length == 0 || nums2.length == 0 || k == 0) {
+            return res;
+        }
+        // use a minHeap to choose the smallers pair
+        Comparator<int[]> comparator = new Comparator<>(){
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return (nums1[o1[0]] + nums2[o1[1]]) - (nums1[o2[0]] + nums2[o2[1]]); // 升序排序：小的排前面
+            }
+        };
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(comparator);
+        // put k nums1 in the heap
+        for(int i = 0; i < nums1.length; i++){
+            minHeap.offer(new int[]{0, i});
+        }
+        while(!minHeap.isEmpty() && k > 0){
+            int[] pair = minHeap.poll();
+            int i = pair[0];
+            int j = pair[1];
+            List<Integer> item = new ArrayList<>();
+            item.add(nums1[i]);
+            item.add(nums2[j]);
+            res.add(item);
+            // 只扩展 nums2[j+1]，避免暴力遍历
+            if (j + 1 < nums2.length) {
+                minHeap.offer(new int[]{i, j + 1});
+            }
+            k--;
+        }
+        return res;
+    }
+
+
+    public String decodeString(String s) {
+        if(s.isEmpty()){
+            return "";
+        }
+        Deque<Integer> numStack = new LinkedList<>();
+        Deque<StringBuilder> strStack = new LinkedList<>();
+        StringBuilder numStr = new StringBuilder();
+        StringBuilder repeateStr = new StringBuilder();
+        int number = 0;
+        for(char c: s.toCharArray()){
+            // if it is a number
+            if(c >= '0' && c <= '9'){
+                numStr.append(c);
+                number = Integer.parseInt(numStr.toString());
+            } else if(c == '['){
+                // push number and current string into stacks
+                numStack.push(number);
+                strStack.push(repeateStr);
+                // reset number and current string
+                numStr = new StringBuilder();
+                repeateStr = new StringBuilder();
+            } else if(c == ']'){
+                int count = numStack.pop();
+                StringBuilder inner = strStack.pop();
+                for(int i = 0; i < count; i++){
+                    inner.append(repeateStr);
+                }
+                repeateStr = inner;
+            } else {
+                repeateStr.append(c);
+            }
+        }
+        return repeateStr.toString();
+    }
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        int len = strs.length;
+        int[] used = new int[len];
+        List<List<String>> res = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            Map<Character, Integer> map = new HashMap<>();
+            String str = strs[i];
+            if (used[i] == 0) {
+                for (char ch : str.toCharArray()) {
+                    map.put(ch, map.getOrDefault(ch, 0) + 1);
+                }
+                List<String> item = new ArrayList<>();
+                for (int j = 0; j < len; j++) {
+                    if (used[j] == 0) {
+                        String str2 = strs[j];
+                        // 方法，判断str是否跟map的单词一样
+                        Map<Character, Integer> temp = new HashMap<>(map);
+                        if (isSame(str2, temp)) {
+                            item.add(str2);
+                            used[j] = 1;
+                        }
+                    }
+                }
+                if (!item.isEmpty()) {
+                    res.add(item);
+                }
+            }
+        }
+        return res;
+    }
+
+
+    public boolean isSame(String str, Map<Character, Integer> map){
+        for(char ch: str.toCharArray()){
+            if(map.containsKey(ch)){
+                map.put(ch, map.get(ch) - 1);
+            } else {
+                return false;
+            }
+        }
+        // check map's value, if exists value != 0, return false
+        for(Map.Entry<Character, Integer> entry: map.entrySet()){
+            if(entry.getValue() != 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+
+
 
 }

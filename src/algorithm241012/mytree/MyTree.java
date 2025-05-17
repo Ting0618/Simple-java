@@ -1396,4 +1396,126 @@ public class MyTree {
         return res;
     }
 
+    public void preorder(TreeNode root){
+        if(root == null){
+            return;
+        }
+        System.out.println(root.val);
+        preorder(root.left);
+        preorder(root.right);
+    }
+    int summ = 0;
+    public void preorderSum(TreeNode root){
+        if(root == null){
+            return;
+        }
+        System.out.print(root.val + "  ");
+        summ += root.val;
+        System.out.println(summ);
+        preorderSum(root.left);
+        preorderSum(root.right);
+        summ -= root.val;
+    }
+
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int size = 0, depth = 0;
+        while(!queue.isEmpty()){
+            depth++;
+            size = queue.size();
+            List<Integer> item = new ArrayList<>();
+            for(int i = 0; i < size; i++){
+                TreeNode first = queue.poll();
+                assert first != null;
+                item.add(first.val);
+                if(first.left != null){
+                    queue.offer(first.left);
+                }
+                if(first.right != null){
+                    queue.offer(first.right);
+                }
+                // if layer number is even, from right to left, reverse item
+                if(i == size - 1 && depth % 2 == 0){
+                    Collections.reverse(item);
+                }
+            }
+            res.add(item);
+        }
+        return res;
+    }
+
+    public void count(TreeNode root, int count){
+        if(root == null){
+            return;
+        }
+        System.out.println(root.val + "  " + count);
+        count(root.left, count + 1);
+        count(root.right, count + 1);
+    }
+
+    int count2 = 0;
+    public void count(TreeNode root){
+        if(root == null){
+            return;
+        }
+        count2++;
+        System.out.println(root.val + "  " + count2);
+        count(root.left);
+        count(root.right);
+    }
+
+    public void preorder4(TreeNode root, int index) {
+        if (root == null) {
+            return;
+        }
+        System.out.println("Node " + index + ": Value = " + root.val);
+        preorder4(root.left, index + 1);
+        preorder4(root.right, index + 1);
+    }
+
+    String SEP = ",";
+    String NULL = "#";
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serialize(root, sb);
+        return sb.toString();
+    }
+    void serialize(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            sb.append(NULL).append(SEP);
+            return;
+        }
+        sb.append(root.val).append(SEP);
+        serialize(root.left, sb);
+        serialize(root.right, sb);
+    }
+
+    public TreeNode deserialize(String data) {
+        LinkedList<String> nodes = new LinkedList<>();
+        for (String s : data.split(SEP)) {
+            nodes.addLast(s);
+        }
+        return deserializeHelper(nodes);
+    }
+
+    TreeNode deserializeHelper(LinkedList<String> nodes) {
+        if (nodes.isEmpty()) {
+            return null;
+        }
+        String first = nodes.removeFirst();
+        if (first.equals(NULL)) {
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.parseInt(first));
+        root.left = deserializeHelper(nodes);
+        root.right = deserializeHelper(nodes);
+        return root;
+    }
+
 }

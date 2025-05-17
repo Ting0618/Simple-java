@@ -1028,4 +1028,67 @@ public class MyArrays {
         return res;
     }
 
+    public int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1, mid = 0;
+        while (left < right){
+            mid = (left + right) / 2;
+            if(target > nums[mid]){
+                left = mid + 1;
+            } else if(target < nums[mid]){
+                right = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return mid;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        int[] res = new int[2];
+        int len = nums.length;
+        int left = 0, right = len - 1, mid = 0;
+        while(left <= right){
+            mid = left + (right - left) / 2;
+            if(nums[mid] > target){
+                right = mid - 1;
+            } else if(nums[mid] < target){
+                left = mid + 1;
+            } else if(nums[mid] == target){
+                res[0] = mid;
+                res[1] = mid;
+                left = mid + 1;
+                right = mid - 1;
+                int flag = mid - 1;
+                while(flag >= 0 && nums[flag] == target){
+                    res[0] = flag;
+                    flag--;
+                }
+                flag = mid;
+                while(flag < len && nums[flag] == target){
+                    res[1] = flag;
+                    flag++;
+                }
+            }
+        }
+        return res;
+    }
+
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length;
+        int left = 0, right = m * n - 1, mid = 0;
+        while (left <= right){
+            mid = left + (right - left) / 2;
+            if(matrix[mid / n][mid % n] == target){
+                return true;
+            } else if (matrix[mid / n][mid % n] > target){
+                right = mid - 1;
+            } else if (matrix[mid / n][mid % n] < target){
+                left = mid + 1;
+            }
+        }
+        return false;
+    }
+
+
 }

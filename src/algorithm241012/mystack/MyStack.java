@@ -3,6 +3,9 @@ package algorithm241012.mystack;
 import java.util.Deque;
 import java.util.LinkedList;
 
+/**
+ * @author tingwong
+ */
 public class MyStack {
     /**
      * description: TODO 48. (lc 20) Valid Parentheses
@@ -88,5 +91,98 @@ public class MyStack {
             }
         }
         return stack.pop();
+    }
+
+    public String simplifyPath(String path) {
+        String[] str = path.split("/");
+        Deque<String> stack = new LinkedList<>();
+        for(String p: str){
+            if(p.isEmpty() || ".".equals(p)){
+                continue;
+            }
+            if("..".equals(p)){
+                if(!stack.isEmpty()){
+                    stack.pop();
+                }
+            } else {
+                stack.push(p);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()){
+            sb.insert(0, stack.pop());
+            sb.insert(0, "/");
+        }
+        return sb.isEmpty()? "/": sb.toString();
+    }
+
+    public int trap(int[] height) {
+        if(height.length == 0){
+            return 0;
+        }
+        // descent stack
+        Deque<Integer> stack = new LinkedList<>();
+        int area = 0;
+        stack.push(0);
+        for(int i = 1; i < height.length; i++){
+            if(height[stack.peek()] > height[i]){
+                stack.push(i);
+            } else if(height[stack.peek()] == height[i]){
+                stack.pop();
+                stack.push(i);
+            } else {
+                // right more than left, it's time to calculate water
+                while (!stack.isEmpty() && height[stack.peek()] <= height[i]){
+                    int topIndex = stack.pop();
+                    int topVal = height[topIndex];
+                    int left;
+                    if(!stack.isEmpty()){
+                        left = stack.peek();
+                        int h = Math.min(height[i], height[left]) - topVal;
+                        int w = i - left - 1;
+                        area += h * w;
+                    }
+                }
+                stack.push(i);
+            }
+        }
+        return area;
+    }
+
+
+    public int largestRectangleArea(int[] heights) {
+        Deque<Integer> stack = new LinkedList<>();
+        stack.push(0);
+        int cur = -1, len = heights.length;
+        int res = heights[0];
+        for(int i = 1; i <= len; i++){
+            if(i < len){
+                cur = heights[i];
+            } else {
+                cur = -1;
+            }
+            if(cur > heights[stack.peek()]){
+                stack.push(i);
+            } else if(cur == heights[stack.peek()]){
+                continue;
+            } else {
+                while(!stack.isEmpty() && cur < heights[stack.peek()]){
+                    int index = stack.pop();
+                    int h = heights[index];
+                    int left;
+                    if(stack.isEmpty()){
+                        left = -1;
+                    } else {
+                        left = stack.peek();
+                    }
+
+                    int w = i - left - 1;
+                    int s = h * w;
+                    res = Math.max(s, res);
+                }
+                stack.push(i);
+            }
+        }
+        return res;
     }
 }
